@@ -1,0 +1,50 @@
+<header>
+    <nav class="navbar navbar-expand-lg justify-content-between" style="background: #F3F2EC;">
+        <div class="container-fluid post-header">
+            <div class="socials">
+                <i class="fa-brands fa-facebook me-3"></i>
+                <i class="fa-brands fa-instagram me-3"></i>
+                <i class="fa-brands fa-linkedin me-3"></i>
+                <i class="fa-brands fa-twitter me-3"></i>
+                <i class="fa-solid fa-b"></i>
+            </div>
+            <div class="d-flex justify-content-center align-items-center" style="padding-left: 33%;">
+                <li class="nav-item d-flex justify-content-center" style="width: 300px;">
+                    {% comment %} <form method="get" action="{% url 'book-search' %}" style="width: 500px;" class="authorization-form flex-row" novalidate>
+                        {% csrf_token %}
+                        {{ form.query.label_tag }}
+                        <input class="form-control" type="text" name="query">
+                        <button class="btn" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    </form> {% endcomment %}
+                </li>
+            </div>
+            {% comment %} <div class="navbar-collapse justify-content-end">
+                <ul class="navbar-nav mr-auto mb-3 mb-lg-0">
+                    <li class="nav-item">
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'profile-detail' user.username %}" class="nav-link">
+                                <i class="fa-regular fa-user"></i> {{ user.username }}
+                            </a>
+                        {% else %}
+                            <a href="{% url 'login' %}" class="nav-link"><i class="fa-regular fa-user"></i> Account</a>
+                        {% endif %}
+                    </li>
+                    <li class="nav-item"><div class="vert-line"></div></li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a href="{% url "logout" %}" class="nav-link"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a>
+                        </li>
+                        <li class="nav-item"><div class="vert-line"></div></li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a  
+                            href="{% if user.is_authenticated %} {% url 'cart' %} {% else %} {% url "login" %} {% endif %} " 
+                        class="nav-link"><i class="fa-solid fa-cart-shopping"></i> Cart</a>
+                    </li>
+                    <li class="nav-item"><div class="vert-line"></div></li>
+                </ul>
+            </div> {% endcomment %}
+        </div>
+    </nav>
+    <hr>
+</header>
