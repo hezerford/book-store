@@ -1,0 +1,628 @@
+* {
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+}
+
+a {
+    color: #000;
+}
+
+body {
+    scroll-behavior: smooth;
+}
+
+.post-header {
+    padding-left: 164px;
+    padding-right: 252px;
+}
+
+/* header */
+
+.navbar {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.nav-link {
+    font-family: 'Plus Jakarta Sans';
+    font-weight: 400;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #777777;
+}
+
+.vert-line {
+    border-left: 1px solid #E0E0E0;
+    height: 16px;
+    margin-left: 25px;
+    margin-right: 25px;
+    margin-top: 8px;
+}
+
+hr {
+    margin: 0;
+    background: #E0E0E0;
+}
+
+.hr-category {
+    margin-top: 8px;
+    border: 1px solid #9A884C;
+    opacity: 1;
+    background: #9A884C;
+}
+
+
+/* main */
+
+#home {
+    background: #F3F2EC;
+    padding-left: 77px;
+    padding-right: 77px;
+    padding-bottom: 180px;
+}
+
+.title {
+    font-family: 'Cormorant Unicase';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 46px;
+    line-height: 56px;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    color: #0A0A0A;
+}
+
+.title:first-child {
+    margin-left: 71px;
+}
+
+.nav-link:hover {
+    color: #74642F;
+}
+
+.menu-link {
+    font-size: 16px;
+}
+
+.menu-link:last-child {
+    margin-right: 250px;
+}
+
+.main-books {
+    margin-top: 208px;
+}
+
+.name {
+    font-family: 'Prata';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 73px;
+    line-height: 145%;
+    letter-spacing: -0.02em;
+    text-transform: capitalize;
+    color: #222222;
+
+    margin-top: 96px;
+}
+
+.description {
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 220%;
+    letter-spacing: 0.04em;
+    color: #7A7A7A;
+
+    margin-bottom: 75px;
+}
+
+.authorization-form {
+    display: flex;
+    flex-direction: column;
+    font-size: 22px;
+    margin-bottom: 10px;
+    color: #000; 
+}
+
+.read-more {
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 220%;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #111111;
+
+    padding: 12px 35px 14px;
+    border-radius: 0;
+    border: 1px solid #C0C0C0;
+    margin-bottom: 126px;
+
+    transition: 0.2s;
+}
+
+.read-more:hover {
+    border: 1px solid #0A0A0A;
+    background: #111;
+    color: #fff;
+}
+
+.book-photo {
+    filter: drop-shadow(2px 4px 30px rgba(115, 114, 109, 0.25));
+}
+
+.arr {
+    min-width: 28px;
+    min-height: 16px;
+}
+
+.arrow {
+    cursor: pointer;
+}
+
+/* associated with */
+
+#associated {
+    padding-top: 85px;
+    padding-bottom: 77px;
+    padding-left: 242px;
+    padding-right: 250px;
+
+    background: #EDEBE4;
+}
+
+/* featured books */
+
+
+
+#featured-books {
+    padding: 180px 215px 180px;
+    background: #F3F2EC;
+}
+
+.sub-title {
+    font-family: 'Prata';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 48px;
+    line-height: 65px;
+    text-align: center;
+    text-transform: capitalize;
+    color: #111111;
+}
+
+.hr-small {
+    width: 400px;
+    height: 1px;
+    background: #E0E0E0;
+}
+
+.book-card {
+    padding-left: 39px;
+}
+
+.book-card:first-child {
+    padding-left: 0px;
+}
+
+.cards {
+    margin-top: 56px;
+}
+
+.card-background {
+    background: #EFEEE8;
+    border: 1px solid #EAE8DF;
+    width: 326px;
+    height: 437px;
+    border-radius: 0;
+}
+
+.name-book {
+    font-family: 'Prata';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 30px;
+    /* identical to box height */
+
+    text-align: center;
+    text-transform: capitalize;
+
+    color: #111111;
+    transition: 0.3s;
+}
+
+.name-book:hover {
+    color: #74642F;
+}
+
+.author-book {
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 18px;
+
+    text-align: center;
+    letter-spacing: 0.02em;
+    text-transform: capitalize;
+
+    color: #888888;
+}
+
+.price {
+    font-family: 'Prata';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 24px;
+    text-align: center;
+    letter-spacing: 0.02em;
+    text-transform: capitalize;
+
+    color: #111111;
+    transition: 0.3s;
+
+    margin-bottom: 55px;
+}
+
+.price:hover {
+    color: #74642F;
+}
+
+.fa-circle {
+    color: #74642F;
+}
+
+.circle {
+    color: #D7D5CC;
+    font-size: 10px;
+}
+
+.circle-circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 100%;
+    border: 1px solid #D7D5CC;
+}
+
+.circle-active {
+    font-size: 10px;
+    color: #74642F;
+}
+
+.mr-circle-active {
+    margin-right: 20px;
+}
+
+.mr-circle {
+    margin-right: 30px;
+}
+
+.pagination {
+    margin-top: 50px;
+}
+
+.all-products {
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 20px;
+    text-align: center;
+    letter-spacing: 0.02em;
+    text-transform: capitalize;
+
+    color: #111111;
+}
+
+/* Самая продаваемая книга */
+
+#best-selling {
+    background: #EDEBE4;
+    padding-top: 153px;
+    padding-bottom: 153px;
+}
+
+.best-selling {
+    text-align: start;
+    margin-top: 80px;
+}
+
+.best-selling-author {
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 16px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+
+    color: #888888;
+    margin-top: 58px;
+}
+
+.best-book-title {
+    font-family: 'Prata';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 28px;
+    line-height: 38px;
+    /* identical to box height */
+
+    text-transform: capitalize;
+
+    color: #111111;
+}
+
+.best-book-price {
+    font-family: 'Prata';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 23px;
+    line-height: 31px;
+    letter-spacing: 0.02em;
+    text-transform: capitalize;
+
+    color: #74642F;
+}
+
+.shop-now {
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    text-align: center;
+    letter-spacing: 0.02em;
+    text-transform: capitalize;
+
+    color: #111111;
+    text-decoration: none;
+}
+
+.shop-now:hover {
+    color: #74642F;
+}
+
+/* Popular Books */
+
+#popular-books {
+    padding: 180px 180px 180px;
+    background: #F3F2EC;
+}
+
+.pre-title {
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 16px;
+    text-align: center;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+
+    color: #7A7A7A;
+}
+
+.category {
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    text-align: center;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+
+    color: #7A7A7A;
+}
+
+.category:hover {
+    color: #111111;
+}
+
+.category-active {
+    font-weight: bold;
+    color: #111111;
+}
+
+.category-block {
+    margin-right: 50px;
+}
+
+.quote {
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 208%;
+
+    text-align: center;
+
+    color: #7A7A7A;
+}
+
+.quote-author {
+    font-family: 'Prata';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 30px;
+    /* identical to box height */
+
+    text-align: center;
+    text-transform: capitalize;
+
+    color: #111111;
+}
+
+.old {
+    font-size: 14px;
+    margin-right: 0.5rem;
+    color: #7A7A7A;
+}
+
+.old:hover {
+    color: #7A7A7A;
+}
+
+.new {
+    color: #74642F;
+}
+
+.quote-percent {
+    padding-top: 4px;
+    padding-left: 9px;
+    padding-bottom: 5px;
+    padding-right: 9px;
+    background: #74642F;
+}
+
+/* Subscribe */
+
+#subscribe-page {
+    padding-top: 145px;
+    padding-bottom: 140px;
+    background: #EDEBE4;
+}
+
+#email {
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20px;
+    letter-spacing: 0.04em;
+
+    color: #7A7A7A;
+
+    background: #EDEBE4;
+    border: none;
+    outline: none;
+
+    width: 255px;
+    height: 31px;
+}
+
+.email-form {
+    justify-content: center;
+}
+
+.send {
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 20px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+
+    color: #111111;
+
+    margin-left: 81px;
+    cursor: pointer;
+}
+
+/* footer */
+
+footer {
+    background: #F3F2EC;
+
+    padding-top: 115px;
+}
+
+h5 {
+    font-family: 'Prata';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 28px;
+    line-height: 38px;
+    /* identical to box height */
+
+    text-transform: capitalize;
+
+    color: #111111;
+}
+
+.footer-article {
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 230%;
+
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+
+    color: #777777;
+
+    height: 37px;
+
+    transition: 0.1s;
+}
+
+.footer-article:hover {
+    color: #111111;
+}
+
+.all-rights-text {
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20px;
+    letter-spacing: 0.02em;
+
+    color: #7A7A7A;
+}
+
+#all-right-reserved {
+    padding-top: 50px;
+    padding-bottom: 51px;
+
+    background: #F3F2EC;
+}
+
+.socials {
+    opacity: 0.75;
+}
+
+/* All Books */
+
+.all-books {
+    margin-top: 100px;
+}
+
+.authorization-title {
+    margin-top: 50px;
+    
+    padding-bottom: 30px;
+}
+
+.full-height {
+    height: 100vh;
+}
+
+.cart-price {
+    font-size: 28px;
+    transform: none;
+}
+
+.no-hover {
+    pointer-events: none;
+    cursor: default;
+}
+
+.profile-btn {
+    color: #000;
+}
+
+.profile-btn:hover {
+    color: #fff;
+}
