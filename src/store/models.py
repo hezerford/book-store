@@ -4,7 +4,7 @@ from django.utils.text import slugify
 
 class Genre(models.Model):
     name = models.CharField(max_length=200, unique=True, verbose_name="Genre name")
-    description = models.TextField(blank=True, null=True, verbose_name="Descrition")
+    description = models.TextField(blank=True, null=True, verbose_name="Description")
 
     def __str__(self) -> str:
         return self.name
@@ -19,7 +19,7 @@ class Book(models.Model):
     description = models.TextField(max_length=1500, verbose_name="Описание")
     author = models.CharField(max_length=100, verbose_name="Автор")
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена")
-    photo = models.ImageField(upload_to="photos/%Y/%m/%d/", verbose_name="Фото аватара", blank=True, null=True)
+    photo = models.ImageField(upload_to="book_covers/%Y/%m/%d/", verbose_name="Фото книги")
     time_create = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
     time_update = models.DateTimeField(auto_now=True, verbose_name="Время обновления")
     is_published = models.BooleanField(default=True, verbose_name="Активна на странице?")
