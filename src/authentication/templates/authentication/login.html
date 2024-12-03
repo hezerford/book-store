@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<div class="container full-height">
+    <div class="d-flex justify-content-center align-items-center flex-column">
+        <h1 class='sub-title authorization-title'>Authorization</h1>
+        <div class="email-form">
+            <form method="post" style="width: 600px;">
+                {% csrf_token %}
+                <div class="form-error authorization-form fs-5">{{ form.non_field_errors }}</div>
+
+                {% for f in form %}
+                <p class="authorization-form fs-5">
+                    <label for="{{ f.id_for_label }}" class="email authorization-form fs-5">{{f.label}}</label>{{f}}
+                </p>
+                <div class="form-error authorization-form fs-5">{{f.errors}}</div>
+            {% endfor %}
+            <button class="btn btn-dark btn-lg" style="align-items: center;" type="submit">Login</button>
+            </form>
+            <div class="d-flex mt-2">
+                <p class="authorization-form fs-5 me-1">Haven't account? </p><a class="authorization-form fs-5" href="{% url 'register' %}">Register</a>
+            </div>  
+        </div>
+    </div>
+</div>
+
+{% endblock body %}
