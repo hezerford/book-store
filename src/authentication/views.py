@@ -9,8 +9,7 @@ from .forms import RegisterUserForm, LoginUserForm
 
 class RegisterUserView(CreateView):
     form_class = RegisterUserForm
-    # TODO: добавить шаблон
-    template_name = "..."
+    template_name = "authentication/register.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -28,8 +27,7 @@ class RegisterUserView(CreateView):
 
 class LoginUserView(LoginView):
     form_class = LoginUserForm
-    # TODO: добавить шаблон
-    template_name = "..."
+    template_name = "authentication/login.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
