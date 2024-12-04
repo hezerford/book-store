@@ -41,10 +41,11 @@ INSTALLED_APPS = [
     # external apps
     "phonenumber_field",
     # apps
-    'store.apps.StoreConfig',
-    'authentication.apps.AuthenticationConfig',
-    'profile.apps.ProfileConfig',
-    
+    "store.apps.StoreConfig",
+    "authentication.apps.AuthenticationConfig",
+    "profile.apps.ProfileConfig",
+    "api.apps.ApiConfig",
+    "cart.apps.CartConfig",
 ]
 
 MIDDLEWARE = [
@@ -93,8 +94,8 @@ DATABASES = {
 }
 
 # Расположение медиа файлов пользователей
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL = "/media/"
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
