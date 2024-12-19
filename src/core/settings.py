@@ -40,10 +40,11 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # external apps
     "phonenumber_field",
+    "debug_toolbar",
     # apps
     "store.apps.StoreConfig",
     "authentication.apps.AuthenticationConfig",
-    "profile.apps.ProfileConfig",
+    "user_profile.apps.UserProfileConfig",
     "api.apps.ApiConfig",
     "cart.apps.CartConfig",
 ]
@@ -56,6 +57,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # external middleware
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -133,7 +136,24 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),  # Папка src/static
+]
+
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379",
+    }
+}
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
