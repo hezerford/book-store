@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block body %}
+
+<section class="container-fluid main-bg pb-5">
+    <div class="d-flex align-items-center flex-column">
+        <div class="d-flex align-items-center justify-content-between">
+            <hr class="hr-small">
+            <h1 class='sub-title authorization-title fs-1'>Edit Profile {{ user.username }}</h1>
+            <hr class="hr-small">
+        </div>
+    <div class="row">
+        <div class="col d-flex justify-content-center profile_picture">
+            {% if user_profile.profile_picture and user_profile.profile_picture.url %}
+                <img class="profile_picture w-100" src="{{ user_profile.profile_picture.url }}" alt="Profile Picture">
+            {% else %}
+                <img src="{% static "profile/img/default_profile.png" %}" alt="Default Profile Picture">
+            {% endif %}
+        </div>
+        <div class="col d-flex">
+            <div class="text-start">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.first_name.errors }}
+                    <p class="fs-5">First name: {{ form.first_name }}</p>
+        
+                    {{ form.last_name.errors }}
+                    <p class="fs-5">Last name: {{ form.last_name }}</p>
+                    
+                    {{ form.street.errors }}
+                    <p class="fs-5">Street: {{ form.street }}</p>
+
+                    {{ form.city.errors }}
+                    <p class="fs-5">City: {{ form.city }}</p>
+
+                    {{ form.postal_code.errors }}
+                    <p class="fs-5">Postal code: {{ form.postal_code }}</p>
+                    
+                    {{ form.country.errors }}
+                    <p class="fs-5">Country: {{ form.country }}</p>
+
+                    {{ form.birth_date.errors }}
+                    <p class="fs-5">Birth date: {{ form.birth_date }}</p>
+
+                    {{ form.bio.errors }}
+                    <p class="fs-5">Bio: {{ form.bio }}</p>
+        
+                    {{ form.phone_number.errors }}
+                    <p class="fs-5">Phone: {{ form.phone_number }}</p>
+                    
+                    {% if user_profile.profile_picture %}
+                        <button type="submit" class="btn read-more mb-0 mt-5">Save Changes</button>
+                        <button type="submit" name="reset_profile_picture" class="btn btn-danger read-more mb-5 mt-5 text-white">
+                            Reset Profile Picture
+                        </button>
+                    {% else %}
+                        <p class="fs-5">Photo:   <input type="file" name="profile_picture"></p>
+                        <button type="submit" class="btn read-more mb-0 mt-4">Save Changes</button>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock body %}
