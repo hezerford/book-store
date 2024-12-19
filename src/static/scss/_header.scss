@@ -1,0 +1,39 @@
+@use "variables" as vars;
+
+
+// TODO: Исправить на нефиксированные отступы
+.post-header {
+    padding-left: 164px;
+    padding-right: 252px;
+}
+
+.nav-link {
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #777777;
+
+    &:hover {
+        color: vars.$color-accent;
+    }
+
+}
+
+.navbar {
+    padding-top: 20px;
+    padding-bottom: 20px;
+
+    .vert-line {
+        border-left: 1px solid #E0E0E0;
+        height: 16px;
+        margin-left: 25px;
+        margin-right: 25px;
+        margin-top: 8px;
+    }
+
+    .hr-category {
+        margin-top: 8px;
+        border: 1px solid #9A884C;
+        opacity: 1;
+        background: #9A884C;
+    }
+}

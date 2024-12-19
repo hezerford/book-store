@@ -1,0 +1,248 @@
+@use 'variables' as vars;
+
+@import "auth";
+@import "cards";
+@import "footer";
+@import "forms";
+@import "global";
+@import "header";
+@import "main_book";
+@import "profile";
+
+.main-bg {
+    background: vars.$color-bg;
+}
+
+// TODO: Поменять padding(и) на что то другое, тк они абсолютные и это не очень
+#home {
+    background: vars.$color-bg;
+    padding-left: 77px;
+    padding-right: 77px;
+    padding-bottom: 180px;
+}
+
+.title {
+    font-family: vars.$font-accent;
+    font-size: 46px;
+    line-height: 56px;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    color: #0A0A0A;
+}
+
+// TODO: Поменять paddings
+#associated {
+    padding-top: 85px;
+    padding-bottom: 77px;
+    padding-left: 242px;
+    padding-right: 250px;
+
+    background: vars.$color-bg-light;
+}
+
+// TODO: Поменять paddings
+#featured-books {
+    padding: 180px 215px 180px;
+    background: vars.$color-bg;
+}
+
+.sub-title {
+    font-family: vars.$font-secondary;
+    font-size: 48px;
+    line-height: 65px;
+    text-align: center;
+    text-transform: capitalize;
+    color: vars.$color-primary;
+}
+
+.hr-small {
+    width: 400px;
+    height: 1px;
+    background: #E0E0E0;
+}
+
+#best-selling {
+    background: vars.$color-bg-light;
+    padding-top: 153px;
+    padding-bottom: 153px;
+}
+
+.best-selling {
+    text-align: start;
+    margin-top: 80px;
+
+    // TODO: Поменять margin
+    &-author {
+        font-weight: 500;
+        font-size: 13px;
+        line-height: 16px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+
+        color: #888888;
+        margin-top: 58px;
+    }
+}
+
+.best-book-title {
+    font-family: vars.$font-secondary;
+    font-size: 28px;
+    line-height: 38px;
+
+    text-transform: capitalize;
+
+    color: vars.$color-primary;
+}
+
+.best-book-price {
+    font-family: vars.$color-secondary;
+    font-size: 23px;
+    line-height: 31px;
+    letter-spacing: 0.02em;
+    text-transform: capitalize;
+
+    color: vars.$color-accent;
+}
+
+.shop-now {
+    font-weight: 500;
+    line-height: 20px;
+    text-align: center;
+    letter-spacing: 0.02em;
+    text-transform: capitalize;
+
+    color: vars.$color-primary;
+    text-decoration: none;
+
+    &:hover {
+        color: vars.$color-accent;
+    }
+}
+
+.pre-title {
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 16px;
+    text-align: center;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+
+    color: vars.$color-secondary;
+}
+
+.category {
+    font-weight: 500;
+    line-height: 20px;
+    text-align: center;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+
+    color: vars.$color-secondary;
+
+    &:hover {
+        color: #111;
+    }
+
+    &-active {
+        font-weight: bold;
+        color: #111;
+    }
+
+    &-block {
+        margin-right: 50px;
+    }
+}
+
+.quote {
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 208%;
+
+    text-align: center;
+
+    color: vars.$color-secondary;
+
+    &-author {
+        font-family: vars.$font-secondary;
+        font-size: 22px;
+        line-height: 30px;
+
+        text-align: center;
+        text-transform: capitalize;
+
+        color: vars.$color-primary;
+    }
+
+    // TODO: Посмотреть на padding 
+    &-percent {
+        padding-top: 4px;
+        padding-left: 9px;
+        padding-bottom: 5px;
+        padding-right: 9px;
+        background: #74642F;
+    }
+}
+
+// TODO: Поменять paddings 
+#subscribe-page {
+    padding-top: 145px;
+    padding-bottom: 140px;
+    background: vars.$color-bg-light;
+}
+
+#email {
+    line-height: 20px;
+    letter-spacing: 0.04em;
+
+    color: vars.$color-secondary;
+
+    background: vars.$color-bg-light;
+    border: none;
+    outline: none;
+
+    width: 255px;
+    height: 31px;
+}
+
+// TODO: Поменять margin
+.send {
+    font-weight: bold;
+    line-height: 20px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+
+    color: vars.$color-primary;
+
+    margin-left: 81px;
+    cursor: pointer;
+}
+
+// All books
+
+.authorization-title {
+    margin-top: 50px;
+
+    padding-bottom: 30px;
+}
+
+.full-height {
+    height: 100vh;
+}
+
+.cart-price {
+    font-size: 28px;
+    transform: none;
+}
+
+.no-hover {
+    pointer-events: none;
+    cursor: default;
+}
+
+.profile-btn {
+    color: #000;
+
+    &:hover {
+        color: #fff;
+    }
+}

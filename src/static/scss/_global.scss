@@ -1,0 +1,39 @@
+@use "variables" as vars;
+
+* {
+    font-family: vars.$font-primary;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+}
+
+a {
+    color: #000;
+}
+
+body {
+    scroll-behavior: smooth;
+}
+
+hr {
+    margin: 0;
+    background: #E0E0E0;
+}
+
+footer {
+    background: vars.$color-bg;
+
+    padding-top: 115px;
+}
+
+h5 {
+    font-family: vars.$font-secondary;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 28px;
+    line-height: 38px;
+
+    text-transform: capitalize;
+
+    color: #111111;
+}

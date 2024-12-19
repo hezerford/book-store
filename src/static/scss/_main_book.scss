@@ -1,0 +1,103 @@
+@use "variables" as vars;
+
+// TODO: есть класс menu-link с last-child с отступом 250 поменять его как то
+
+.main-books {
+    margin-top: 208px;
+
+    .name {
+        font-family: vars.$font-secondary;
+        font-size: 73px;
+        line-height: 145%;
+        letter-spacing: -0.02em;
+        text-transform: capitalize;
+        color: #222222;
+
+        margin-top: 96px;
+    }
+
+    .description {
+        font-size: 16px;
+        line-height: 220%;
+        letter-spacing: 0.04em;
+        color: vars.$color-secondary;
+
+        margin-bottom: 75px;
+    }
+
+
+    .book-photo {
+        filter: drop-shadow(2px 4px 30px rgba(115, 114, 109, 0.25));
+    }
+
+    .arrow {
+        cursor: pointer;
+    }
+}
+
+// TODO: Поменять padding и margin-bottom! на что то другое
+.read-more {
+    line-height: 220%;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: vars.$color-primary;
+
+    padding: 12px 35px 14px;
+
+    border-radius: 0;
+    border: 1px solid #C0C0C0;
+
+    margin-bottom: 126px;
+
+    transition: 0.2s;
+
+    &:hover {
+        border: 1px solid #0A0A0A;
+        background: vars.$color-primary;
+        color: #fff;
+    }
+
+}
+
+.pagination {
+    align-items: center;
+
+    .all-products {
+        font-weight: bold;
+        line-height: 20px;
+        text-align: center;
+        letter-spacing: 0.02em;
+        text-transform: capitalize;
+
+        color: vars.$color-primary;
+    }
+
+    .mr-circle {
+        margin-right: 30px;
+
+        &-active {
+            margin-right: 30px;
+        }
+
+        .circle-head {
+            width: 30px;
+            height: 30px;
+            border-radius: 100%;
+            border: 1px solid #D7D5CC;
+
+            .fa-circle {
+                color: vars.$color-accent;
+            }
+
+            .circle {
+                color: #D7D5CC;
+                font-size: 10px;
+
+                &-active {
+                    font-size: 10px;
+                    color: vars.$color-accent;
+                }
+            }
+        }
+    }
+}

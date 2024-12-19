@@ -1,0 +1,68 @@
+@use "variables" as vars;
+
+// TODO: Поменять padding
+.cards {
+
+    .book-card {
+        padding-left: 39px;
+
+        &:first-child {
+            padding-left: 0px;
+        }
+
+        .card-background {
+            background: #EFEEE8;
+            border: 1px solid #EAE8DF;
+            width: 326px;
+            height: 437px;
+            border-radius: 0;
+        }
+
+        .name-book {
+            font-family: vars.$font-secondary;
+            font-size: 22px;
+            line-height: 30px;
+
+            text-align: center;
+            text-transform: capitalize;
+
+            color: vars.$color-primary;
+            ;
+            transition: 0.3s;
+
+            &:hover {
+                color: vars.$color-accent;
+            }
+        }
+
+        .author-book {
+            font-size: 14px;
+            line-height: 18px;
+
+            text-align: center;
+            letter-spacing: 0.02em;
+            text-transform: capitalize;
+
+            color: #888888;
+        }
+
+        // TODO: Поменять имя на book-price и margin-bottom на что то другое
+        .price {
+            font-family: vars.$font-secondary;
+            font-size: 18px;
+            line-height: 24px;
+            text-align: center;
+            letter-spacing: 0.02em;
+            text-transform: capitalize;
+
+            color: vars.$color-primary;
+            transition: 0.3s;
+
+            margin-bottom: 55px;
+
+            &:hover {
+                color: vars.$color-accent;
+            }
+        }
+    }
+}
