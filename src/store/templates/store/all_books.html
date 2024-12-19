@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<section class="d-flex align-items-center justify-content-between p-0 main-bg">
+    <div class="container-fluid">
+        <div class="d-flex cards justify-content-between flex-direction-row flex-wrap all-books">
+            {% for book in books %}
+            <a class="text-decoration-none" href="{% url 'book-detail' book.slug %}">
+                <div class="book-card">
+                    <div class="card card-background">
+                        <img src="{{book.photo.url}}" alt="">
+                    </div>
+                    <p class="name-book mt-4">{{ book.title }}</p>
+                    <p class="author-book">{{ book.author }}</p>
+                    {% if book.discounted_price %}
+                            <div class="d-flex justify-content-center">
+                                <p class="price mb-1 me-3 text-decoration-line-through no-hover">${{ book.price }}</p>
+                                <p class="price mb-1 font-weight-bold">$ {{ book.discounted_price }}</p>
+                            </div>
+                    {% else %}
+                            <p class="price mb-1 text-center">$ {{ book.price }}</p>
+                    {% endif %}
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% endblock body %}

@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block body %}
+<section class="main-bg">
+    <div class="container pt-5 full-height">
+        <div class="row">
+            <!-- Изображение книги -->
+            <div class="col d-flex justify-content-center">
+                <img src="{{ book.photo.url }}" alt="{{ book.title }}" class="img-fluid">
+            </div>
+    
+            <!-- Описание книги -->
+            <div class="col">
+                <h1 class="best-book-title mb-3">{{ book.title }}</h1>
+                <img src="{% static "store/img/wave-line.svg" %}" alt="">
+                <p class="best-selling-author mt-2">By {{ book.author }}</p>
+    
+                <!-- Цена -->
+                <div class="d-flex align-items-center">
+                    {% if book.discounted_price %}
+                        <p class="price mb-1 me-3 text-decoration-line-through">${{ book.price }}</p>
+                        <p class="price font-weight-bold">$ {{ book.discounted_price }}</p>
+                    {% else %}
+                        <p class="price">$ {{ book.price }}</p>
+                    {% endif %}
+                </div>
+    
+                <!-- Описание книги -->
+                <p class="description mb-3">{{ book.description }}</p>
+    
+                <!-- Жанры -->
+                <p class="description text-dark mb-3">Genres: 
+                    {% for genre in book.genre.all %}
+                        <span>{{ genre.name }}{% if not forloop.last %}, {% endif %}</span>
+                    {% endfor %}
+                </p>
+    
+                <!-- Количество в корзине -->
+                {% if in_cart %}
+                    <p class="description text-dark mb-3">Quantity in cart: {{ cart_item.quantity }}</p>
+                {% endif %}
+    
+                <!-- Кнопки -->
+                {% if book.is_published %}
+                    <div class="d-flex gap-3">
+                        <!-- Добавить в корзину -->
+                        {% comment %} <form action="{% if user.is_authenticated %}{% url 'add-to-cart' book.slug %}{% else %}{% url 'login' %}{% endif %}" method="post">
+                            {% csrf_token %}
+                            <button class="btn btn-primary">Add to cart</button>
+                        </form> {% endcomment %}
+
+                        <form action="{% url 'add-to-cart' book.slug %}" method="post">
+                            {% csrf_token %}
+                            <button class="btn btn-primary">Add to cart</button>
+                        </form>
+    
+                        <!-- Удалить из корзины -->
+                        {% if in_cart %}
+                            <form action="{% url 'remove-from-cart' book.slug %}" method="post">
+                                {% csrf_token %}
+                                <button class="btn btn-danger">Remove from cart</button>
+                            </form>
+                        {% endif %}
+    
+                        <!-- Управление избранным -->
+                        {% if user.is_authenticated %}
+                            <form method="post" action="{% if book_in_favorites %}{% url 'remove-from-favorites' book_slug=book.slug %}{% else %}{% url 'add-to-favorites' book_slug=book.slug %}{% endif %}">
+                                {% csrf_token %}
+                                <button class="btn {% if book_in_favorites %}btn-secondary{% else %}btn-warning{% endif %}">
+                                    {% if book_in_favorites %}Remove from Favorites{% else %}Add to Favorites{% endif %}
+                                </button>
+                            </form>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock body %}

@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+{% load static %}
+{% load custom_filters %}
+
+{% block title %} {{ title }} {% endblock title %}
+
+{% block body %}
+
+{% comment %} Главная книга {% endcomment %}
+<section id="home" class="d-flex align-items-center justify-content-between pt-3">
+    <div class="container-fluid">
+        <div class="row align-items-center main-books">
+            {% comment %} <div class="col-1"><i class="fa-solid fa-arrow-left fa-xl arrow"></i></div> {% endcomment %}
+            <div class="col-7">
+                <div class="name">{{ random_book.title }}</div>
+                <p class="description">{{ random_book.description|truncate_description:500 }}</p>
+
+
+                <button type="button" class="btn read-more" onclick="window.location.href='{% url 'book-detail' random_book.slug %}'">Read More ➜</button>
+
+
+                {% comment %} Пагинация {% endcomment %}
+                <nav>
+                    <ul class="pagination">
+                        <li class="page-item mr-circle-active">
+                            <div class="circle-head d-flex justify-content-center align-items-center">
+                                <i class="fa-solid fa-circle circle-active"></i>
+                            </div>
+                        </li>
+                        <li class="page-item mr-circle">
+                            <span aria-hidden="true"><i class="fa-solid fa-circle circle"></i></span>
+                        </li>
+                        <li class="page-item mr-circle">
+                            <span aria-hidden="true"><i class="fa-solid fa-circle circle"></i></span>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="col-5 d-flex justify-content-center">
+                <img class="book-photo" src="{{ random_book.photo.url }}" alt="">
+            </div>
+            {% comment %} <div class="d-flex col-1 justify-content-center"><i class="fa-solid fa-arrow-right fa-xl arrow"></i></div> {% endcomment %}
+        </div>
+    </div>
+</section>
+
+{% comment %} Совместно {% endcomment %}
+<section id="associated" class="d-flex align-items-center justify-content-between">
+    <div class="container-fluid">
+        <div class="row align-items-center">
+            <div class="col"><img src="{% static "store/img/1.svg" %}" alt=""></div>
+            <div class="col"><img src="{% static "store/img/2.svg" %}" alt=""></div>
+            <div class="col"><img src="{% static "store/img/3.svg" %}" alt=""></div>
+            <div class="col"><img src="{% static "store/img/4.svg" %}" alt=""></div>
+            <div class="col"><img src="{% static "store/img/5.svg" %}" alt=""></div>
+        </div>
+    </div>
+</section>
+
+{% comment %} Избранные книги {% endcomment %}
+<section id="featured-books" class="d-flex align-items-center justify-content-between">
+    <div class="container-fluid">
+        <p class="d-flex pre-title justify-content-center mb-2">Some Quality Items</p>
+        <div class="d-flex align-items-center justify-content-between">
+            <hr class="hr-small">
+            <h1 class="sub-title">Featured Books</h1>
+            <hr class="hr-small">
+        </div>
+        <div class="d-flex cards justify-content-between flex-direction-row flex-nowrap">
+            {% for book in feature_books %}
+            <a class="text-decoration-none" href="{% url 'book-detail' book.slug %}">
+                <div class="book-card">
+                    <div class="card card-background">
+                        <img src="{{book.photo.url}}" alt="">
+                    </div>
+                    <p class="name-book mt-4">{{ book.title }}</p>
+                    <p class="author-book">{{ book.author }}</p>
+                    {% if book.discounted_price %}
+                        <div class="d-flex justify-content-center">
+                            <p class="price me-3 text-decoration-line-through">$ {{ book.price }}</p>
+                            <p class="price">$ {{ book.discounted_price }}</p>
+                        </div>
+                    {% else %}
+                        <p class="price">$ {{ book.price }}</p>
+                    {% endif %}
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        <hr class="mb-5">
+        <nav>
+            <ul class="pagination d-circle-circle flex justify-content-center align-items-center">
+                <li class="page-item mr-circle-active">
+                    <div class="circle-head d-flex justify-content-center align-items-center">
+                        <i class="fa-solid fa-circle circle-active"></i>
+                    </div>
+                </li>
+                <li class="page-item mr-circle">
+                    <span aria-hidden="true"><i class="fa-solid fa-circle circle"></i></span>
+                </li>
+                <li class="page-item mr-circle">
+                    <span aria-hidden="true"><i class="fa-solid fa-circle circle"></i></span>
+                </li>
+                <li class="page-item ms-auto"> 
+                    <a href="{% url 'all-books' %}" class="all-products text-decoration-none">View all products ➜</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</section>
+
+{% comment %} Самая продаваемая книга {% endcomment %}
+# TODO: В работе
+<section id="best-selling" class="d-flex align-items-center">
+    <div class="container">
+        <div class="row d-flex justify-content-center">
+            <div class="col d-flex justify-content-center p-0">
+                <img src="{% static "store/img/best-book.png" %}" alt="">
+            </div>
+            <div class="col">
+                <div class="sub-title best-selling">Best Selling Book</div>
+                <img src="{% static "store/img/wave-line.svg" %}" alt="">
+                <p class="best-selling-author">By Timbur Hood</p>
+                <p class="best-book-title">Birds gonna be happy</p>
+                <p class="description mb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu feugiat amet, libero ipsum enim pharetra hac.</p>
+                <p class="best-book-price mb-5">$ 45.00</p>
+                <a href="#" class="shop-now">Shop It Now ➜</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="d-flex align-items-center justify-content-center main-bg">
+    <div class="container-fluid">
+        <p class="pre-title d-flex justify-content-center mb-2 mt-5">Some Quality Items</p>
+        <div class="d-flex align-items-center justify-content-between">
+            <hr class="hr-small">
+            <h1 class="sub-title">Popular Books</h1>
+            <hr class="hr-small">
+        </div>
+        <div class="categories d-flex justify-content-center mt-5">
+            <div class="category-block">
+                <a href="#" class="category category-active">All Genre</a>
+                <hr class="hr-category">
+            </div>
+            <div class="category-block">
+                <a href="#" class="category">Business</a>
+            </div>
+            <div class="category-block">
+                <a href="#" class="category">Technology</a>
+            </div>
+            <div class="category-block">
+                <a href="#" class="category">Adventure</a>
+            </div>
+            <div class="category-block">
+                <a href="#" class="category">Romantic</a>
+            </div>
+            <div class="category-block me-0">
+                <a href="#" class="category">Fictional</a>
+            </div>
+        </div>
+        <div class="d-flex cards justify-content-between flex-direction-row flex-nowrap">
+            {% for book in pop_books %}
+                <a class="text-decoration-none" href="{% url 'book-detail' book.slug %}">
+                    <div class="book-card">
+                        <div class="card card-background">
+                            <img src="{{book.photo.url}}" alt="">
+                        </div>
+                        <p class="name-book mt-4">{{ book.title }}</p>
+                        <p class="author-book">{{ book.author }}</p>
+                        <div class="d-flex justify-content-center">
+                        {% if book.discounted_price %}
+                            <div class="d-flex">
+                                <p class="price mb-5 me-3 text-decoration-line-through no-hover">${{ book.price }}</p>
+                                <p class="price mb-5 font-weight-bold">$ {{ book.discounted_price }}</p>
+                            </div>
+                        {% else %}
+                                <p class="price mb-5 text-start">$ {{ book.price }}</p>
+                        {% endif %}
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+        <hr>
+    </div>
+</section>
+
+<section class="justify-content-center pt-5 pb-5 main-bg">
+    <div class="sub-title text-center mt-5">Quote Of The Day</div>
+    <img style="margin-left: 49%;" src="{% static "shop/img/wave-line.svg" %}" alt="">
+    <p class="quote mb-4">“{{ random_quote.quote }}“</p>
+    <p class="quote-author mb-5">{{ random_quote.author_quote }}</p>
+</section>
+
+<section id="subscribe-page" class="d-flex align-items-center">
+    <div class="container">
+        <div class="row d-flex">
+            <div class="col">
+                <h1 id="contact" class="sub-title text-start">Subscribe to <br> our newsletter</h1>
+                <img src="{% static "store/img/wave-line.svg" %}" alt="">
+            </div>
+            <div class="col">
+                <p class="description mb-5">Sed eu feugiat amet, libero ipsum enim pharetra hac dolor sit amet, consectetur. Elit adipiscing enim pharetra hac.</p>
+                <div class="d-flex">
+                    <div class="email-form d-flex align-items-center">
+                        <input type="email" id="email" pattern=".+@globex\.com" size="30" placeholder="Enter your email address here" required>
+                        <p type="submit" class="send mb-0">send <i class="fa-regular fa-paper-plane"></i></p>
+                    </div>
+                </div>
+                <hr style="width: 400px;">
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock body %}
