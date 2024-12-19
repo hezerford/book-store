@@ -8,13 +8,14 @@
     <title>{% block title %} Base Title {% endblock title %}</title>
 </head>
 <body>
+
     {% include "components/navbar.html" %}
     {% include "components/header.html" %}
     {% block body %}
     
     Base Body
 
-    {% include "components/footer.html" %}
     {% endblock body %}
+    {% include "components/footer.html" %}
 </body>
 </html>
