@@ -2,27 +2,41 @@
 
 {% block body %}
 
-<div class="container full-height">
-    <div class="d-flex justify-content-center align-items-center flex-column">
-        <h1 class='sub-title authorization-title'>Authorization</h1>
-        <div class="email-form">
-            <form method="post" style="width: 600px;">
-                {% csrf_token %}
-                <div class="form-error authorization-form fs-5">{{ form.non_field_errors }}</div>
+<section class="main-bg">
+    <div class="container full-height">
+        <div class="d-flex justify-content-center align-items-center flex-column">
+            <h1 class="sub-title authorization-title mb-4">Authorization</h1>
+            <div class="email-form">
+                <form method="post" class="w-100" style="max-width: 600px;">
+                    {% csrf_token %}
+                    
+                    <!-- Ошибки формы -->
+                    <div class="form-error d-flex flex-column fs-5 text-danger mb-3">
+                        {{ form.non_field_errors }}
+                    </div>
+    
+                    {% for f in form %}
+                    <div class="mb-3">
+                        <label for="{{ f.id_for_label }}" class="form-label fs-5">{{ f.label }}</label>
+                        {{ f }}
+                        <div class="form-error fs-6 text-danger">
+                            {{ f.errors }}
+                        </div>
+                    </div>
+                    {% endfor %}
+    
+                    <!-- Кнопка отправки формы -->
+                    <button class="btn btn-dark btn-lg w-100" type="submit">Login</button>
+                </form>
 
-                {% for f in form %}
-                <p class="authorization-form fs-5">
-                    <label for="{{ f.id_for_label }}" class="email authorization-form fs-5">{{f.label}}</label>{{f}}
-                </p>
-                <div class="form-error authorization-form fs-5">{{f.errors}}</div>
-            {% endfor %}
-            <button class="btn btn-dark btn-lg" style="align-items: center;" type="submit">Login</button>
-            </form>
-            <div class="d-flex mt-2">
-                <p class="authorization-form fs-5 me-1">Haven't account? </p><a class="authorization-form fs-5" href="{% url 'register' %}">Register</a>
-            </div>  
+                <!-- Ссылка на регистрацию -->
+                <div class="d-flex justify-content-center mt-2">
+                    <p class="fs-5 me-2">Haven't an account? </p>
+                    <a class="fs-5" href="{% url 'register' %}">Register</a>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+</section>
 
 {% endblock body %}

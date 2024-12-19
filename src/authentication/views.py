@@ -4,6 +4,8 @@ from django.views.generic import CreateView
 from django.contrib.auth import login
 from django.contrib.auth.views import LoginView, LogoutView
 
+from user_profile.models import UserProfile
+
 from .forms import RegisterUserForm, LoginUserForm
 
 
@@ -17,8 +19,9 @@ class RegisterUserView(CreateView):
         return context
 
     def form_valid(self, form):
-        user = form.save()
-        login(self.request, user)
+        user = form.save()  # Сохраняем пользователя
+        UserProfile.objects.create(user=user)  # Создаем профиль
+        login(self.request, user)  # Авторизуем пользователя
         return redirect("home")
 
     def get_success_url(self):
