@@ -7,7 +7,7 @@ from .models import CartItem
 
 
 class CartView(TemplateView):
-    template_name = "cart.html"
+    template_name = "cart/cart.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<section class="d-flex align-items-center p-0">
+    <div class="container-fluid full-height main-bg">
+        <div class="row">
+            <div class="col-10">
+                <div class="d-flex cards justify-content-between flex-direction-row flex-wrap all-books">
+                    {% for cart_item in cart_items %}
+                    <a class="text-decoration-none" href="{% url 'book-detail' cart_item.book.slug %}">
+                        <div class="book-card">
+                            <div class="card card-background">
+                                <img src="{{ cart_item.book.photo.url }}" alt="">
+                            </div>
+                            <p class="name-book mt-4">{{ cart_item.book.title }}</p>
+                            <p class="author-book">{{ cart_item.book.author }}</p>
+                            {% if cart_item.book.discounted_price %}
+                                    <div class="d-flex justify-content-center">
+                                        <p class="price mb-1 me-3 text-decoration-line-through no-hover">${{ cart_item.book.price }}</p>
+                                        <p class="price mb-1 font-weight-bold">$ {{ cart_item.book.discounted_price }}</p>
+                                    </div>
+                            {% else %}  
+                                    <p class="price mb-1 text-center">$ {{ cart_item.book.price }}</p>
+                            {% endif %}
+                            <p class="price">Quantity: {{ cart_item.quantity }}</p>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% if cart_items|length > 0 %}
+            <div class="col-2 d-flex justify-content-center align-items-center">
+                <h1 class="price cart-price no-hover text-center">Total price: ${{ total_price }}</h1>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+{% endblock body %}
