@@ -13,7 +13,7 @@
             {% comment %} <div class="col-1"><i class="fa-solid fa-arrow-left fa-xl arrow"></i></div> {% endcomment %}
             <div class="col-7">
                 <div class="name">{{ random_book.title }}</div>
-                <p class="description">{{ random_book.description|truncate_description:500 }}</p>
+                <p class="description">{{ random_book.description|truncatechars:500 }}</p>
 
 
                 <button type="button" class="btn read-more" onclick="window.location.href='{% url 'book-detail' random_book.slug %}'">Read More ➜</button>

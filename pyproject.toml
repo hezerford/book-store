@@ -15,6 +15,9 @@ pillow = "^11.0.0"
 django-phonenumber-field = { extras = ["phonenumberslite"], version = "^8.0.0" }
 redis = {extras = ["hiredis"], version = "^5.2.1"}
 django-debug-toolbar = "^4.4.6"
+djangorestframework = "^3.15.2"
+markdown = "^3.7"
+django-filter = "^24.3"
 
 
 [build-system]
