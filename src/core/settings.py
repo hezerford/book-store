@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "phonenumber_field",
     "debug_toolbar",
     "rest_framework",
+    "django_filters",
     # apps
     "store.apps.StoreConfig",
     "authentication.apps.AuthenticationConfig",
