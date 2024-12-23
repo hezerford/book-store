@@ -7,7 +7,7 @@ from debug_toolbar.toolbar import debug_toolbar_urls
 
 urlpatterns = [
     path("", include("store.urls")),
-    # path("api/", include("api.urls")),
+    path("api/", include("api.urls")),
     path("auth/", include("authentication.urls")),
     path("cart/", include("cart.urls")),
     path("profile/", include("user_profile.urls")),
