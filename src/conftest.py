@@ -22,8 +22,13 @@ def create_three_books():
 
 
 @pytest.fixture
+def existing_user():
+    # Создаем пользователя для тестов
+    return User.objects.create_user(username="testuser", password="testpassword")
+
+
+@pytest.fixture
 def authenticated_client():
-    user = User.objects.get_or_create(username="testuser", password="testpass123456")
     client = APIClient()
-    client.force_authenticate(user=user)
+    client.force_authenticate(existing_user)
     return client

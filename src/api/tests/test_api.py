@@ -11,7 +11,7 @@ def assert_book_fields(book_data):
     assert "price" in book_data
 
 
-@pytest.mark.django_db(transaction=True)
+@pytest.mark.django_db
 def test_all_books_api(authenticated_client, create_three_books):
     # Создаем экземпляры книг
     create_three_books()
@@ -40,7 +40,7 @@ def test_all_books_api(authenticated_client, create_three_books):
     assert_book_fields(first_book)
 
 
-@pytest.mark.django_db(transaction=True)
+@pytest.mark.django_db
 def test_book_detail_api(authenticated_client, create_book):
     book = create_book()
     url = reverse("book-detail-api", kwargs={"pk": book.pk})
@@ -51,7 +51,7 @@ def test_book_detail_api(authenticated_client, create_book):
     assert_book_fields(response.data)
 
 
-@pytest.mark.django_db(transaction=True)
+@pytest.mark.django_db
 def test_discounted_book_list_api(authenticated_client, create_book):
     create_book(discounted_price=None)
     create_book(discounted_price=15)
