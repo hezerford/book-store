@@ -12,12 +12,12 @@ def assert_book_fields(book_data):
 
 
 @pytest.mark.django_db
-def test_all_books_api(authenticated_client, create_three_books):
+def test_all_books_api(authenticated_API_client, create_three_books):
     # Создаем экземпляры книг
     create_three_books()
 
     url = reverse("all-books-api")
-    response = authenticated_client.get(url)
+    response = authenticated_API_client.get(url)
 
     assert response.status_code == status.HTTP_200_OK
 
@@ -41,10 +41,10 @@ def test_all_books_api(authenticated_client, create_three_books):
 
 
 @pytest.mark.django_db
-def test_book_detail_api(authenticated_client, create_book):
+def test_book_detail_api(authenticated_API_client, create_book):
     book = create_book()
     url = reverse("book-detail-api", kwargs={"pk": book.pk})
-    response = authenticated_client.get(url)
+    response = authenticated_API_client.get(url)
 
     assert response.status_code == status.HTTP_200_OK
 
@@ -52,13 +52,13 @@ def test_book_detail_api(authenticated_client, create_book):
 
 
 @pytest.mark.django_db
-def test_discounted_book_list_api(authenticated_client, create_book):
+def test_discounted_book_list_api(authenticated_API_client, create_book):
     create_book(discounted_price=None)
     create_book(discounted_price=15)
     create_book(discounted_price=20)
 
     url = reverse("discounted-books-api")
-    response = authenticated_client.get(url)
+    response = authenticated_API_client.get(url)
     assert response.status_code == status.HTTP_200_OK
 
     assert isinstance(response.data, dict)
@@ -72,7 +72,7 @@ def test_discounted_book_list_api(authenticated_client, create_book):
 
 
 @pytest.mark.django_db(transaction=True)
-def test_book_search_api(authenticated_client, create_book):
+def test_book_search_api(authenticated_API_client, create_book):
     create_book(
         title="Python Book",
         description="Learn Python programming",
@@ -100,7 +100,7 @@ def test_book_search_api(authenticated_client, create_book):
     )
 
     url = reverse("book-search-api")
-    response = authenticated_client.get(url, {"title": "Python"})
+    response = authenticated_API_client.get(url, {"title": "Python"})
     assert response.status_code == status.HTTP_200_OK
 
     # Проверяем, что в ответе есть данные и они соответствуют ожидаемой структуре

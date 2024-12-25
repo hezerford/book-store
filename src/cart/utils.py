@@ -8,10 +8,8 @@ from store.models import Book
 # Получить существующую корзину или создать новую
 def get_or_create_cart(request):
     if request.user.is_authenticated:
-        # Пользователь авторизован, ищем или создаем корзину
         cart, created = Cart.objects.get_or_create(user=request.user, is_active=True)
     else:
-        # Если пользователь не авторизован, создаем сессию
         if not request.session.session_key:
             request.session.save()
         session_key = request.session.session_key

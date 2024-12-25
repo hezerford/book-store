@@ -13,6 +13,7 @@ from django.core.cache import cache
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from user_profile.forms import FavoriteBooksForm
+from user_profile.models import UserProfile
 from .forms import BookSearchForm
 
 from .models import Book, Genre, Quote
@@ -95,17 +96,21 @@ class BookDetailView(DetailView):
 
         # Если пользователь авторизован, добавляем данные корзины и избранного
         if self.request.user.is_authenticated:
-            user_profile = self.request.user.userprofile
+            try:
+                user_profile = self.request.user.userprofile
+            except UserProfile.DoesNotExist:
+                user_profile = None  # Профиль отсутствует
 
-            # Проверка книги в избранных
-            context["book_in_favorites"] = user_profile.favorite_books.filter(
-                pk=book.id
-            ).exists()
+            if user_profile:
+                # Проверка книги в избранных
+                context["book_in_favorites"] = user_profile.favorite_books.filter(
+                    pk=book.id
+                ).exists()
 
-            # Форма для избранных
-            context["favorite_books_form"] = FavoriteBooksForm(
-                instance=user_profile, initial={"favorite_books": [book.id]}
-            )
+                # Форма для избранных
+                context["favorite_books_form"] = FavoriteBooksForm(
+                    instance=user_profile, initial={"favorite_books": [book.id]}
+                )
 
             # Получение корзины пользователя
             cart, _ = Cart.objects.get_or_create(user=self.request.user, is_active=True)

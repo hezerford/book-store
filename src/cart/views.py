@@ -27,6 +27,10 @@ class AddToCartView(View):
 class RemoveFromCartView(View):
     def post(self, request, book_slug):
         cart = get_or_create_cart(request)
+        print(
+            f"Cart ID: {cart.id}, Cart user ID: {cart.user.id if cart.user else 'None'}"
+        )
         cart_item = get_object_or_404(CartItem, cart=cart, book__slug=book_slug)
+        print(f"Found CartItem ID: {cart_item.pk}, Book slug: {cart_item.book.slug}")
         cart_item.delete()
         return redirect("cart")
