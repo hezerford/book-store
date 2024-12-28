@@ -28,7 +28,7 @@ class HomePage(ListView):
     # Загружаем книги с необходимыми данными
     def get_books_with_related_data(self):
 
-        # hasattr для ленивой инциализации, чтобы избежать повторного выполнения запроса к БД
+        # hasattr для ленивой инициализации, чтобы избежать повторного выполнения запроса к БД
         # Также означает, что данные не загружаются сразу при создании объекта представления, а только в момент, когда они действительно понадобятся.
         if not hasattr(self, "_books_with_related_data"):
             self._books_with_related_data = Book.objects.only(
@@ -134,12 +134,9 @@ class ToggleFavoriteView(LoginRequiredMixin, View):
         # Добавить или удалить книгу из избранного
         if book in user_profile.favorite_books.all():
             user_profile.favorite_books.remove(book)
-            action = "removed"
         else:
             user_profile.favorite_books.add(book)
-            action = "added"
 
-        messages.success(request, f"Book was successfully {action} from favorites.")
         return redirect("book-detail", book_slug=book_slug)
 
 

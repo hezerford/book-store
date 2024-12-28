@@ -9,10 +9,15 @@ from cart.models import Cart, CartItem
 from user_profile.models import UserProfile
 
 
+@pytest.fixture(autouse=True)
+def media_storage(settings, tmpdir):
+    settings.MEDIA_ROOT = tmpdir.strpath
+
+
 @pytest.fixture
 def create_book():
     def _create_book(**kwargs):
-        return mixer.blend(Book, photo=None, **kwargs)
+        return mixer.blend(Book, **kwargs)
 
     return _create_book
 
@@ -20,7 +25,7 @@ def create_book():
 @pytest.fixture
 def create_three_books():
     def _create_books():
-        return mixer.cycle(3).blend(Book, photo=None)
+        return mixer.cycle(3).blend(Book, photo="/static/img/default-book.png")
 
     return _create_books
 
