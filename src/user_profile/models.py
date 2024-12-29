@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 from phonenumber_field.modelfields import PhoneNumberField
+from django.core.validators import RegexValidator
 
 from store.models import Book
 
@@ -25,7 +26,14 @@ class UserProfile(models.Model):
     bio = models.TextField(max_length=500, blank=True)
     date_joined = models.DateTimeField(auto_now_add=True)
 
-    phone_number = PhoneNumberField(null=True, blank=True)
+    phone_regex = RegexValidator(
+        regex=r"^\+?1?\d{10,15}$",
+        message="Пожалуйста, введите действительный номер телефона, состоящий не менее чем из 10 цифр.",
+    )
+    phone_number = models.CharField(
+        validators=[phone_regex], max_length=17, blank=True
+    )  # Validators should be a list
+
     profile_picture = models.ImageField(
         upload_to=user_profile_path, blank=True, null=True
     )

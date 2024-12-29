@@ -33,10 +33,9 @@ def create_three_books():
 @pytest.fixture
 def existing_user():
     # Создаем пользователя для тестов
-    user = User.objects.create_user(username="testuser", password="testpassword")
-    UserProfile.objects.create(user=user)
-    # return User.objects.create_user(username="testuser", password="testpassword")
-    return user
+    # user = User.objects.create_user(username="testuser", password="testpassword")
+    return User.objects.create_user(username="testuser", password="testpassword")
+    # return user
 
 
 @pytest.fixture
@@ -63,3 +62,11 @@ def create_cart_with_items(existing_user, create_book):
         CartItem.objects.create(cart=cart, book=book, quantity=i + 1, price=book.price)
 
     return cart
+
+
+@pytest.fixture
+def create_user_profile(existing_user):
+    def _create_user_profile(**kwargs):
+        return UserProfile.objects.create(user=existing_user, **kwargs)
+
+    return _create_user_profile

@@ -46,7 +46,10 @@ def test_book_detail_view(client, create_book):
 
 
 @pytest.mark.django_db
-def test_toggle_favorite_view(authenticated_client, create_book, existing_user):
+def test_toggle_favorite_view(
+    authenticated_client, create_book, existing_user, create_user_profile
+):
+    create_user_profile()
     # Проверка добавления книги в избранное
     book = create_book(slug="test-book")
     user_profile = existing_user.userprofile

@@ -34,14 +34,6 @@ class UserProfileForm(forms.ModelForm):
             )
         return postal_code
 
-    def clean_phone_number(self):
-        phone_number = self.cleaned_data.get("phone_number")
-        if phone_number and len(phone_number) < 10:
-            raise ValidationError(
-                "Пожалуйста, введите действительный номер телефона, состоящий не менее чем из 10 цифр."
-            )
-        return phone_number
-
 
 class FavoriteBooksForm(forms.ModelForm):
     class Meta:
