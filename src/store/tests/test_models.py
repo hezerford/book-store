@@ -1,10 +1,8 @@
 from datetime import datetime
-from decimal import Decimal
 import pytest
-from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-from store.models import Book, Email, Genre, Quote
+from store.models import Book, Subscription, Genre, Quote
 
 
 @pytest.mark.django_db
@@ -66,9 +64,9 @@ def test_quote_creation():
 
 @pytest.mark.django_db
 def test_email_unique():
-    Email.objects.create(email="unique@example.com")
+    Subscription.objects.create(email="unique@example.com")
     with pytest.raises(Exception):
-        Email.objects.create(email="unique@example.com")
+        Subscription.objects.create(email="unique@example.com")
 
 
 @pytest.mark.django_db

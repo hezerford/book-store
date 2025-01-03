@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Book, Genre, Quote, Email
+from .models import Book, Genre, Quote, Subscription
 
 
 @admin.register(Book)
@@ -32,6 +32,6 @@ class QuoteAdmin(admin.ModelAdmin):
     search_fields = ("quote", "author_quote")
 
 
-@admin.register(Email)
-class EmailAdmin(admin.ModelAdmin):
+@admin.register(Subscription)
+class SubscriptionAdmin(admin.ModelAdmin):
     list_display = ("email", "date_subscribed", "is_active", "last_sent")

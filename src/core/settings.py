@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "rest_framework",
     "django_filters",
+    "django_celery_results",
     # apps
     "store.apps.StoreConfig",
     "authentication.apps.AuthenticationConfig",
@@ -151,8 +152,11 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CACHES = {
     "default": {
-        "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379",
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
     }
 }
 
@@ -164,3 +168,19 @@ REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
 }
+
+# CELERY
+
+CELERY_BROKER_URL = "redis://localhost:6379/0"
+CELERY_RESULT_BACKEND = "django-db"
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = config("SMTP_EMAIL")
+EMAIL_HOST_PASSWORD = config("SMTP_PASS")
+
+# URL сайта (для формирования ссылок в письме)
+SITE_URL = "http://127.0.0.1:8000"
+DEFAULT_FROM_EMAIL = "Book Store <your_email@example.com>"

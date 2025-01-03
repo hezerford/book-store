@@ -74,7 +74,7 @@ class Quote(models.Model):
         ordering = ["-date_added"]
 
 
-class Email(models.Model):
+class Subscription(models.Model):
     email = models.EmailField(unique=True, verbose_name="Email")
     date_subscribed = models.DateTimeField(
         auto_now_add=True, verbose_name="Дата подписки"

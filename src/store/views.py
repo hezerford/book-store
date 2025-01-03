@@ -14,7 +14,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from user_profile.forms import FavoriteBooksForm
 from user_profile.models import UserProfile
-from .forms import BookSearchForm
+from .forms import BookSearchForm, SubscriptionForm
 
 from .models import Book, Genre, Quote
 
@@ -24,6 +24,14 @@ from cart.models import Cart, CartItem
 class HomePage(ListView):
     model = Book
     template_name = "store/home.html"
+    form_class = SubscriptionForm
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("home")
+        return redirect("home")
 
     # Загружаем книги с необходимыми данными
     def get_books_with_related_data(self):
@@ -56,21 +64,21 @@ class HomePage(ListView):
 
         context["title"] = "Home"
 
-        context["form"] = form = BookSearchForm(self.request.GET or None)
+        # Создаём экземпляр формы вручную
+        context["form"] = BookSearchForm(self.request.GET or None)
+        context["subscription_form"] = self.form_class()
 
         # Поиск книг по частичному совпадению с заголовком
+        form = context["form"]
         if form.is_valid():
             query = form.cleaned_data["query"]
             if query:
-                context["books"] = Book.objects.filter(title__icontaints=query)
+                context["books"] = Book.objects.filter(title__icontains=query)
             else:
                 context["books"] = Book.objects.all()
-        # query = self.request.GET.get("query")
 
-        # Не работает так как надо)
-        context["pop_books"] = self.get_books_with_related_data
-        context["feature_books"] = self.get_books_with_related_data
-
+        context["pop_books"] = self.get_books_with_related_data()
+        context["feature_books"] = self.get_books_with_related_data()
         context["random_book"] = self.get_random_book()
         context["random_quote"] = self.get_random_quote()
 
@@ -183,3 +191,20 @@ class AllBooks(ListView):
         context["books"] = books
 
         return context
+
+
+class SubscribeToMailing(View):
+    def get(self, request):
+        # Отображение формы подписки
+        form = SubscriptionForm()
+        return render(request, "store/home.html", {"form": form})
+
+    def post(self, request):
+        # Обработка формы подписки
+        form = SubscriptionForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Вы успешно подписались на рассылку!")
+        else:
+            messages.error(request, "Произошла ошибка. Проверьте введенные данные.")
+        return redirect("home")

@@ -1,4 +1,5 @@
 from django import forms
+from .models import Subscription
 
 
 class BookSearchForm(forms.Form):
@@ -8,3 +9,15 @@ class BookSearchForm(forms.Form):
         required=False,
         widget=forms.TextInput(attrs={"placeholder": "Book name"}),
     )
+
+
+class SubscriptionForm(forms.ModelForm):
+    class Meta:
+        model = Subscription
+        fields = ["email"]
+
+    def clean_email(self):
+        email = self.cleaned_data.get("email")
+        if Subscription.objects.filter(email=email).exists():
+            raise forms.ValidationError("Этот email уже подписан.")
+        return email

@@ -201,12 +201,11 @@
             </div>
             <div class="col">
                 <p class="description mb-5">Sed eu feugiat amet, libero ipsum enim pharetra hac dolor sit amet, consectetur. Elit adipiscing enim pharetra hac.</p>
-                <div class="d-flex">
-                    <div class="email-form d-flex align-items-center">
-                        <input type="email" id="email" pattern=".+@globex\.com" size="30" placeholder="Enter your email address here" required>
-                        <p type="submit" class="send mb-0">send <i class="fa-regular fa-paper-plane"></i></p>
-                    </div>
-                </div>
+                <form method="post" class="d-flex">
+                    {% csrf_token %}
+                    {{ subscription_form.email }}
+                    <button type="submit" class="send mb-0">Send <i class="fa-regular fa-paper-plane"></i></button>
+                </form>
                 <hr style="width: 400px;">
             </div>
         </div>

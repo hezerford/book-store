@@ -4,9 +4,16 @@ from rest_framework.test import APIClient
 from mixer.backend.django import mixer
 from django.contrib.auth.models import User
 
-from store.models import Book
+from store.models import Book, Subscription
 from cart.models import Cart, CartItem
 from user_profile.models import UserProfile
+
+from django.core.cache import cache
+
+
+@pytest.fixture(autouse=True)
+def clear_cache():
+    cache.clear()  # Очищает весь кэш перед каждым тестом
 
 
 @pytest.fixture(autouse=True)
@@ -70,3 +77,11 @@ def create_user_profile(existing_user):
         return UserProfile.objects.create(user=existing_user, **kwargs)
 
     return _create_user_profile
+
+
+@pytest.fixture
+def create_subscription():
+    def _create_subscription(**kwargs):
+        return mixer.blend(Subscription, **kwargs)
+
+    return _create_subscription

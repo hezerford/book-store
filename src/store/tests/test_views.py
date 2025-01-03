@@ -1,10 +1,6 @@
 from django.test import override_settings
 import pytest
 from django.urls import reverse
-from mixer.backend.django import mixer
-
-from store.models import Book, Genre, Quote
-from user_profile.models import UserProfile
 
 
 @pytest.mark.django_db
@@ -29,9 +25,6 @@ def test_homepage_random_book(client, create_three_books):
     assert random_book is not None, "Random book was not selected."
 
 
-@override_settings(
-    CACHES={"default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}}
-)  # Отключаем кэш во время теста, чтобы не возникало ошибок
 @pytest.mark.django_db
 def test_book_detail_view(client, create_book):
     book = create_book(title="Test Book", slug="test-book")
@@ -71,9 +64,6 @@ def test_toggle_favorite_view(
     ), "Book was not removed from favorites."
 
 
-@override_settings(
-    CACHES={"default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}}
-)  # Отключаем кэш во время теста, чтобы не возникало ошибок
 @pytest.mark.django_db
 def test_all_books_view(client, create_three_books):
     create_three_books()
@@ -87,9 +77,6 @@ def test_all_books_view(client, create_three_books):
     ), "AllBooks context does not contain correct number of books."
 
 
-@override_settings(
-    CACHES={"default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}}
-)  # Отключаем кэш во время теста, чтобы не возникало ошибок
 @pytest.mark.parametrize(
     "query, expected_count, expected_titles",
     [
