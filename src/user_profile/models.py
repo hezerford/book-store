@@ -31,7 +31,7 @@ class UserProfile(models.Model):
         message="Пожалуйста, введите действительный номер телефона, состоящий не менее чем из 10 цифр.",
     )
     phone_number = models.CharField(
-        validators=[phone_regex], max_length=17, blank=True
+        validators=[phone_regex], max_length=17, blank=True, null=True
     )  # Validators should be a list
 
     profile_picture = models.ImageField(
