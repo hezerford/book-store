@@ -1,0 +1,69 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: >
+      sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    working_dir: /app/src
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+      - redis
+    stdin_open: true
+    tty: true
+
+  redis:
+    image: redis:latest
+    container_name: redis_cache
+    ports:
+      - "6380:6379"
+
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: [ "celery", "-A", "core", "worker", "--loglevel=info" ]
+    volumes:
+      - .:/app
+    working_dir: /app/src
+    depends_on:
+      - redis
+      - postgres
+    env_file:
+      - .env
+
+  celery-beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: [ "celery", "-A", "core", "beat", "--loglevel=info" ]
+    volumes:
+      - .:/app
+    working_dir: /app/src
+    depends_on:
+      - redis
+      - postgres
+    env_file:
+      - .env
+
+  postgres:
+    image: postgres:16
+    container_name: postgres_db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: qwertyasdfgh
+      POSTGRES_DB: BookStore
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
