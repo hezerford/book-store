@@ -72,6 +72,24 @@ def create_cart_with_items(existing_user, create_book):
 
 
 @pytest.fixture
+def create_cart():
+    """Создаёт корзину для тестов."""
+
+    def _create_cart(user=None, session_key=None, created_at=None, is_active=True):
+        cart = Cart.objects.create(
+            user=user,
+            session_key=session_key or "test_session",
+            is_active=is_active,
+        )
+        if created_at:
+            cart.created_at = created_at
+            cart.save()
+        return cart
+
+    return _create_cart
+
+
+@pytest.fixture
 def create_user_profile(existing_user):
     def _create_user_profile(**kwargs):
         return UserProfile.objects.create(user=existing_user, **kwargs)

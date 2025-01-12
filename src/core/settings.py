@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "django_filters",
     "django_celery_results",
+    "django_celery_beat",
     # apps
     "store.apps.StoreConfig",
     "authentication.apps.AuthenticationConfig",
