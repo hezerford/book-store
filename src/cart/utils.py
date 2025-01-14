@@ -5,8 +5,9 @@ from .models import Cart, CartItem
 from store.models import Book
 
 
-# Получить существующую корзину или создать новую
 def get_or_create_cart(request):
+    """Получает, если есть или создает корзину."""
+
     if request.user.is_authenticated:
         cart, created = Cart.objects.get_or_create(user=request.user, is_active=True)
     else:
@@ -21,6 +22,8 @@ def get_or_create_cart(request):
 
 
 def add_to_cart(request, book_slug):
+    """Добавляет книгу в корзину."""
+
     cart = get_or_create_cart(request)
     book = get_object_or_404(Book, slug=book_slug)
 

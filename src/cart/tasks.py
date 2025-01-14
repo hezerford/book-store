@@ -3,6 +3,8 @@ from celery import shared_task
 
 @shared_task
 def delete_old_anonymous_carts():
+    """Удаляет корзины анонимных пользователей, которым существуют больше одного дня."""
+
     from cart.models import Cart  # Импорт модели внутри задачи
     from datetime import timedelta
     from django.utils.timezone import now

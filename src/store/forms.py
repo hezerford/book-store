@@ -12,6 +12,8 @@ class BookSearchForm(forms.Form):
 
 
 class SubscriptionForm(forms.ModelForm):
+    """Форма заполнения подписки на рассылку."""
+
     class Meta:
         model = Subscription
         fields = ["email"]

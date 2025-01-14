@@ -9,6 +9,8 @@ from .models import Book, Subscription
 @receiver(post_save, sender=Book)
 @receiver(post_delete, sender=Book)
 def clear_book_cache(sender, instance, **kwargs):
+    """Удаление всего кэша после добавления/удаления новой книги."""
+
     from django.core.cache import cache
 
     cache.delete_pattern("search_*")  # Удаляем все ключи, начинающиеся с "search_"
@@ -17,6 +19,8 @@ def clear_book_cache(sender, instance, **kwargs):
 
 @receiver(post_save, sender=Book)
 def send_new_book_notification(sender, instance, created, **kwargs):
+    """Отправка рассылки при добавлении новой книги."""
+
     if created:  # Только при создании новой книги
         print(f"Signal triggered for book: {instance.title}")
         subscribers = Subscription.objects.filter(is_active=True)

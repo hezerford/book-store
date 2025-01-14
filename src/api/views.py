@@ -28,12 +28,16 @@ class BookDetailAPIView(generics.RetrieveAPIView):
 
 
 class DiscountedBookListAPI(generics.ListAPIView):
+    """Отображает все книги со скидкой."""
+
     queryset = Book.objects.filter(discounted_price__isnull=False)
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 class BookSearchAPI(generics.ListAPIView):
+    """Отображает книгу по запросу или ничего не выводит."""
+
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     filter_backends = (filters.DjangoFilterBackend, OrderingFilter)

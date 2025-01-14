@@ -85,7 +85,7 @@ class HomePage(ListView):
         return context
 
 
-# @method_decorator(cache_page(60 * 5), name="dispatch")
+@method_decorator(cache_page(60 * 5), name="dispatch")
 class BookDetailView(DetailView):
     model = Book
     template_name = "store/book_detail.html"
@@ -174,6 +174,8 @@ class BookSearchView(View):
 
 @method_decorator(cache_page(60 * 15), name="dispatch")
 class AllBooks(ListView):
+    """Отображение всех книг."""
+
     model = Book
     template_name = "store/all_books.html"
     context_object_name = "books"
@@ -194,6 +196,8 @@ class AllBooks(ListView):
 
 
 class SubscribeToMailing(View):
+    """Подписка на рассылку."""
+
     def get(self, request):
         # Отображение формы подписки
         form = SubscriptionForm()
