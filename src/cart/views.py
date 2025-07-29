@@ -12,7 +12,7 @@ class CartView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         cart = get_or_create_cart(self.request)
-        context["cart_items"] = CartItem.objects.filter(cart=cart)
+        context["cart_items"] = cart.cartitem_set.select_related("book").all()
         context["total_price"] = cart.get_total_price()
         context["total_items"] = cart.get_total_items()
         return context

@@ -5,3 +5,19 @@
 
     color: #000;
 }
+
+.captcha-container img {
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 5px;
+}
+
+.captcha-container audio {
+    margin-top: 10px;
+}
+
+.captcha-refresh {
+    cursor: pointer;
+    color: #0d6efd;
+    text-decoration: underline;
+}

@@ -205,6 +205,24 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-axes"
+version = "7.0.1"
+description = "Keep track of failed login attempts in Django-powered sites."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "django_axes-7.0.1-py3-none-any.whl", hash = "sha256:31832eff26735fd1c600b30d987eb848fea175e59b256da43f36fe205a474961"},
+    {file = "django_axes-7.0.1.tar.gz", hash = "sha256:16121bbb7bacf1ed83f23a4800ac168707ffce014407df1049aa4f2ea28d3d52"},
+]
+
+[package.dependencies]
+asgiref = ">=3.6.0"
+django = ">=3.2"
+
+[package.extras]
+ipware = ["django-ipware (>=3)"]
+
+[[package]]
 name = "django-celery-beat"
 version = "2.7.0"
 description = "Database-backed Periodic Tasks."
@@ -287,6 +305,19 @@ phonenumbers = ["phonenumbers (>=7.0.2)"]
 phonenumberslite = ["phonenumberslite (>=7.0.2)"]
 
 [[package]]
+name = "django-ranged-response"
+version = "0.2.0"
+description = "Modified Django FileResponse that adds Content-Range headers."
+optional = false
+python-versions = "*"
+files = [
+    {file = "django-ranged-response-0.2.0.tar.gz", hash = "sha256:f71fff352a37316b9bead717fc76e4ddd6c9b99c4680cdf4783b9755af1cf985"},
+]
+
+[package.dependencies]
+django = "*"
+
+[[package]]
 name = "django-redis"
 version = "5.4.0"
 description = "Full featured redis cache backend for Django."
@@ -303,6 +334,26 @@ redis = ">=3,<4.0.0 || >4.0.0,<4.0.1 || >4.0.1"
 
 [package.extras]
 hiredis = ["redis[hiredis] (>=3,!=4.0.0,!=4.0.1)"]
+
+[[package]]
+name = "django-simple-captcha"
+version = "0.6.1"
+description = "A very simple, yet powerful, Django captcha application"
+optional = false
+python-versions = "*"
+files = [
+    {file = "django_simple_captcha-0.6.1-py2.py3-none-any.whl", hash = "sha256:75c4a89cf54011be54dd96fc4bfc2286f92bed88c46d247b9e504b7fc4c7cfe5"},
+    {file = "django_simple_captcha-0.6.1.tar.gz", hash = "sha256:9df5cf24e38b91af62d601f8e5189b0f6d28dbaa55a363a8b9d727703f9c35de"},
+]
+
+[package.dependencies]
+Django = ">=4.2"
+django-ranged-response = "0.2.0"
+djangorestframework = ">=3.15.0"
+Pillow = ">=6.2.0"
+
+[package.extras]
+test = ["testfixtures"]
 
 [[package]]
 name = "django-timezone-field"
@@ -862,4 +913,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "1ae43027b7dd98d2e5eaa34a392ed135da670fed14f1a6ae6612c4f5d0ff5ce3"
+content-hash = "068c2d4f54c3457abecb47325e434611cb0c7a3b4975b93fa1e3248c16896c81"

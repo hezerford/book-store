@@ -24,6 +24,9 @@ def media_storage(settings, tmpdir):
 @pytest.fixture
 def create_book():
     def _create_book(**kwargs):
+        # Только устанавливаем разумные значения, если они не заданы
+        kwargs.setdefault("price", 20.00)
+        kwargs.setdefault("discounted_price", 15.00)
         return mixer.blend(Book, **kwargs)
 
     return _create_book

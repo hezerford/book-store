@@ -1,7 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.core.validators import MinLengthValidator
+from django.core.validators import MinLengthValidator, RegexValidator
 from django.contrib.auth.models import User
+
+from captcha.fields import CaptchaField
 
 
 class RegisterUserForm(UserCreationForm):
@@ -18,7 +20,13 @@ class RegisterUserForm(UserCreationForm):
         label="Password",
         widget=forms.PasswordInput(attrs={"class": "form-input"}),
         help_text="Password must be at least 8 characters long and contain both letters and numbers.",
-        validators=[MinLengthValidator(8)],
+        validators=[
+            MinLengthValidator(8),
+            RegexValidator(
+                regex=r"^(?=.*[A-Za-z])(?=.*\d)",
+                message="Password must contain both letters and numbers.",
+            ),
+        ],
     )
     password2 = forms.CharField(
         label="Repeat Password",
@@ -31,6 +39,7 @@ class RegisterUserForm(UserCreationForm):
 
 
 class LoginUserForm(AuthenticationForm):
+
     username = forms.CharField(
         label="Username",
         widget=forms.TextInput(attrs={"class": "form-input"}),
@@ -38,4 +47,7 @@ class LoginUserForm(AuthenticationForm):
     password = forms.CharField(
         label="Password",
         widget=forms.PasswordInput(attrs={"class": "form-input"}),
+    )
+    captcha = CaptchaField(
+        label="Enter Captcha", error_messages={"invalid": "Invalid captcha"}
     )

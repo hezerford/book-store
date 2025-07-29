@@ -14,17 +14,39 @@
                     <div class="form-error d-flex flex-column fs-5 text-danger mb-3">
                         {{ form.non_field_errors }}
                     </div>
-    
-                    {% for f in form %}
+
+                    <!-- Явное расположение полей -->
                     <div class="mb-3">
-                        <label for="{{ f.id_for_label }}" class="form-label fs-5">{{ f.label }}</label>
-                        {{ f }}
+                        <label for="{{ form.username.id_for_label }}" class="form-label fs-5">Username</label>
+                        {{ form.username }}
                         <div class="form-error fs-6 text-danger">
-                            {{ f.errors }}
+                            {{ form.username.errors }}
                         </div>
                     </div>
-                    {% endfor %}
-    
+
+                    <div class="mb-3">
+                        <label for="{{ form.password.id_for_label }}" class="form-label fs-5">Password</label>
+                        {{ form.password }}
+                        <div class="form-error fs-6 text-danger">
+                            {{ form.password.errors }}
+                        </div>
+                    </div>
+
+                    <!-- Капча (только если есть в форме) -->
+                    {% if form.captcha %}
+                    <div class="mb-3 captcha-container">
+                        <label for="{{ form.captcha.id_for_label }}" class="form-label fs-5">Security Check</label>
+                        <div class="d-flex align-items-center gap-3">
+                            {{ form.captcha }}
+                            <span class="captcha-refresh">⟳</span>
+                        </div>
+                        <div class="form-error fs-6 text-danger">
+                            {{ form.captcha.errors }}
+                        </div>
+                        <small class="form-text text-muted">Click the image to refresh</small>
+                    </div>
+                    {% endif %}
+
                     <!-- Кнопка отправки формы -->
                     <button class="btn btn-dark btn-lg w-100" type="submit">Login</button>
                 </form>
@@ -38,5 +60,21 @@
         </div>
     </div>
 </section>
+
+{% comment %} Обновление капчи {% endcomment %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const refreshIcon = document.querySelector('.captcha-refresh');
+        const captchaImage = document.querySelector('.captcha img');
+        
+        if (refreshIcon && captchaImage) {
+            refreshIcon.addEventListener('click', function() {
+                // Добавляем временную метку для обхода кеша
+                const newSrc = captchaImage.src.split('?')[0] + '?' + Date.now();
+                captchaImage.src = newSrc;
+            });
+        }
+    });
+</script>
 
 {% endblock body %}

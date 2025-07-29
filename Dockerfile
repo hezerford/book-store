@@ -18,7 +18,7 @@ RUN pip install --no-cache-dir poetry
 COPY pyproject.toml poetry.lock /app/
 
 # Устанавливаем зависимости
-RUN poetry config virtualenvs.create false && poetry install --no-root --no-dev
+RUN poetry config virtualenvs.create false && poetry install --no-root
 
 # Копируем всё содержимое проекта в контейнер
 COPY . /app

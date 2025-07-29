@@ -34,11 +34,16 @@ def add_to_cart(request, book_slug):
 
     # Ищем существующую запись для этой книги
     cart_item, created = CartItem.objects.get_or_create(
-        cart=cart, book=book, defaults={"price": price}
+        cart=cart, book=book, defaults={"price": price, "quantity": 0}
     )
 
+    # Обновляем цену (на случай, если она изменилась)
+    cart_item.price = price
+    # Увеличиваем количество только если элемент уже существовал
     if not created:
-        cart_item.quantity += 1  # Если запись уже есть, увеличиваем количество
+        cart_item.quantity += 1
+    else:
+        cart_item.quantity = 1  # или 0, если по умолчанию 0
     cart_item.save()
 
     return redirect("cart")

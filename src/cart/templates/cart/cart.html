@@ -12,8 +12,8 @@
                     <a class="text-decoration-none" href="{% url 'book-detail' cart_item.book.slug %}">
                         <div class="book-card">
                             <div class="card card-background">
-                                {% if book.photo %}
-                                    <img src="{{ book.photo.url }}" alt="{{ book.title }}">
+                                {% if cart_item.book.photo %}
+                                    <img src="{{ cart_item.book.photo.url }}" alt="{{ book.title }}">
                                 {% else %}
                                     <img src="{% static 'img/default-book.png' %}" alt="{{ book.title }}">
                                 {% endif %}

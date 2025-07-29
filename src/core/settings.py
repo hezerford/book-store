@@ -8,10 +8,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+from datetime import timedelta
+import sys
 from decouple import config
 from pathlib import Path
 
 import os
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -45,6 +48,8 @@ INSTALLED_APPS = [
     "django_filters",
     "django_celery_results",
     "django_celery_beat",
+    "captcha",
+    "axes",
     # apps
     "store.apps.StoreConfig",
     "authentication.apps.AuthenticationConfig",
@@ -53,17 +58,26 @@ INSTALLED_APPS = [
     "cart.apps.CartConfig",
 ]
 
+AUTHENTICATION_BACKENDS = [
+    "axes.backends.AxesStandaloneBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "axes.middleware.AxesMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     # external middleware
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
+    # "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
+
+# if DEBUG is False:
+#     del MIDDLEWARE[8]
 
 ROOT_URLCONF = "core.urls"
 
@@ -77,6 +91,7 @@ TEMPLATES = [
                 "django.template.context_processors.debug",
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
+                "django.template.context_processors.csrf",
                 "django.contrib.messages.context_processors.messages",
             ],
         },
@@ -101,8 +116,8 @@ DATABASES = {
 }
 
 # Расположение медиа файлов пользователей
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -163,8 +178,11 @@ CACHES = {
     }
 }
 
+AXES_CACHE = "default"
+
 INTERNAL_IPS = [
     "127.0.0.1",
+    "localhost",
 ]
 
 REST_FRAMEWORK = {
@@ -187,3 +205,35 @@ EMAIL_HOST_PASSWORD = config("SMTP_PASS")
 # URL сайта (для формирования ссылок в письме)
 SITE_URL = "http://127.0.0.1:8000"
 DEFAULT_FROM_EMAIL = "Book Store <your_email@example.com>"
+
+# DJANGO DEBUG TOOLBAR
+
+
+def show_toolbar(request):
+    return True
+
+
+DEBUG_TOOLBAR_CONFIG = {
+    "SHOW_TOOLBAR_CALLBACK": show_toolbar,
+}
+
+IS_RUNNING_TESTS = True
+
+
+# DJANGO-AXES
+
+AXES_FAILURE_LIMIT = 5  # Количество попыток перед блокировкой
+AXES_RESET_ON_SUCCESS = True
+AXES_COOLOFF_TIME = 0.1
+AXES_LOCKOUT_TEMPLATE = "authentication/lockout.html"  # Шаблон блокировки
+AXES_ENABLE_ADMIN = True  # Показывать в админке
+
+if "test" in sys.argv:
+    AUTHENTICATION_BACKENDS = ["django.contrib.auth.backends.ModelBackend"]
+    AXES_ENABLED = False
+
+# CAPTCHA
+
+CAPTCHA_LENGTH = 5  # Длина капчи
+CAPTCHA_FONT_SIZE = 30  # Размер шрифта
+CAPTCHA_IMAGE_SIZE = (120, 60)  # Размер изображения
