@@ -10,11 +10,16 @@ from .models import Book, Subscription
 @receiver(post_delete, sender=Book)
 def clear_book_cache(sender, instance, **kwargs):
     """Удаление всего кэша после добавления/удаления новой книги."""
-
     from django.core.cache import cache
+    from django.core.cache.backends.base import BaseCache
 
-    cache.delete_pattern("search_*")  # Удаляем все ключи, начинающиеся с "search_"
-    cache.delete("all_books")
+    # Проверяем, есть ли метод delete_pattern
+    if hasattr(cache, "delete_pattern"):
+        cache.delete_pattern("search_*")
+        cache.delete("all_books")
+    # Альтернатива для DummyCache и других бэкендов без delete_pattern
+    elif hasattr(cache, "clear"):
+        cache.clear()  # Полная очистка (если доступна)
 
 
 @receiver(post_save, sender=Book)
