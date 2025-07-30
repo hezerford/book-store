@@ -6,7 +6,7 @@
             {% if books %}
             <div class="d-flex cards justify-content-between flex-direction-row flex-wrap all-books mt-5">
                 {% for book in books %}
-                <a class="text-decoration-none" href="{% url 'book-detail' book.slug %}">
+                <a class="text-decoration-none ms-5" href="{% url 'book-detail' book.slug %}">
                     <div class="book-card">
                         <div class="card card-background">
                             <img src="{{book.photo.url}}" alt="">

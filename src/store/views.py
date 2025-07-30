@@ -8,6 +8,7 @@ from django.views.generic import ListView, DetailView
 
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_headers
 from django.core.cache import cache
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -85,7 +86,6 @@ class HomePage(ListView):
         return context
 
 
-@method_decorator(cache_page(60 * 5), name="dispatch")
 class BookDetailView(DetailView):
     model = Book
     template_name = "store/book_detail.html"

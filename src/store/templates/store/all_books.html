@@ -4,7 +4,7 @@
 
 <section class="d-flex align-items-center justify-content-between p-0 main-bg">
     <div class="container-fluid">
-        <div class="d-flex cards justify-content-between flex-direction-row flex-wrap all-books">
+        <div class="d-flex cards justify-content-between flex-direction-row flex-wrap all-books mt-5">
             {% for book in books %}
             <a class="text-decoration-none" href="{% url 'book-detail' book.slug %}">
                 <div class="book-card">
