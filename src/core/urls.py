@@ -3,6 +3,8 @@ from django.urls import include, path
 from django.conf.urls.static import static
 from django.conf import settings
 
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+
 from debug_toolbar.toolbar import debug_toolbar_urls
 
 urlpatterns = [
@@ -13,6 +15,12 @@ urlpatterns = [
     path("profile/", include("user_profile.urls")),
     path("admin/", admin.site.urls),
     path("captcha/", include("captcha.urls")),
+    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+    path(
+        "api/docs/",
+        SpectacularSwaggerView.as_view(url_name="schema"),
+        name="swagger-ui",
+    ),
 ]
 # ] + debug_toolbar_urls()
 

@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     "django_celery_beat",
     "captcha",
     "axes",
+    "drf_spectacular",
     # apps
     "store.apps.StoreConfig",
     "authentication.apps.AuthenticationConfig",
@@ -109,8 +110,15 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # REST Framework
 REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Book Store API",
+    "DESCRIPTION": "API для книжного магазина",
+    "VERSION": "1.0.0",
 }
 
 # Celery
