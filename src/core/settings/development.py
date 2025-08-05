@@ -50,3 +50,5 @@ AUTHENTICATION_BACKENDS = [
     "axes.backends.AxesStandaloneBackend",
     "django.contrib.auth.backends.ModelBackend",
 ]
+
+SITE_URL = "http://127.0.0.1:8000"
