@@ -16,13 +16,15 @@ class AllBooksAPI(generics.ListAPIView):
         "author",
         "price",
         "discounted_price",
-    )
+    ).prefetch_related("genre")
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 class BookDetailAPIView(generics.RetrieveAPIView):
-    queryset = Book.objects.all()
+    queryset = Book.objects.filter(discounted_price__isnull=False).prefetch_related(
+        "genre",
+    )
     serializer_class = BookDetailSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
@@ -38,7 +40,7 @@ class DiscountedBookListAPI(generics.ListAPIView):
 class BookSearchAPI(generics.ListAPIView):
     """Отображает книгу по запросу или ничего не выводит."""
 
-    queryset = Book.objects.all()
+    queryset = Book.objects.all().prefetch_related("genre")
     serializer_class = BookSerializer
     filter_backends = (filters.DjangoFilterBackend, OrderingFilter)
     filterset_class = BookFilter
