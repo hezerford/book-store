@@ -20,12 +20,17 @@ class AllBooksAPI(generics.ListAPIView):
     Использует пагинацию.
     """
 
-    queryset = Book.objects.only(
-        "title",
-        "author",
-        "price",
-        "discounted_price",
-    ).prefetch_related("genre")
+    queryset = (
+        Book.objects.filter(is_published=True)
+        .only(
+            "title",
+            "description",
+            "author",
+            "price",
+            "discounted_price",
+        )
+        .prefetch_related("genre")
+    )
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
@@ -44,9 +49,10 @@ class BookDetailAPIView(generics.RetrieveAPIView):
     Возвращает полную информацию о книге, включая описание, фото и статус публикации.
     """
 
-    queryset = Book.objects.all().prefetch_related("genre")
+    queryset = Book.objects.filter(is_published=True).prefetch_related("genre")
     serializer_class = BookDetailSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+    lookup_field = "slug"
 
     @extend_schema(
         summary="Получить детали книги",
@@ -59,7 +65,16 @@ class BookDetailAPIView(generics.RetrieveAPIView):
 class DiscountedBookListAPI(generics.ListAPIView):
     """Отображает все книги со скидкой."""
 
-    queryset = Book.objects.filter(discounted_price__isnull=False)
+    queryset = (
+        Book.objects.filter(discounted_price__isnull=False, is_published=True)
+        .only(
+            "title",
+            "author",
+            "price",
+            "discounted_price",
+        )
+        .prefetch_related("genre")
+    )
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
@@ -74,7 +89,7 @@ class DiscountedBookListAPI(generics.ListAPIView):
 class BookSearchAPI(generics.ListAPIView):
     """Отображает книгу по запросу или ничего не выводит."""
 
-    queryset = Book.objects.all().prefetch_related("genre")
+    queryset = Book.objects.filter(is_published=True).prefetch_related("genre")
     serializer_class = BookSerializer
     filter_backends = (filters.DjangoFilterBackend, OrderingFilter)
     filterset_class = BookFilter

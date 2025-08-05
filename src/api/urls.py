@@ -9,5 +9,5 @@ urlpatterns = [
         name="discounted-books-api",
     ),
     path("book-search/", BookSearchAPI.as_view(), name="book-search-api"),
-    path("books/<int:pk>/", BookDetailAPIView.as_view(), name="book-detail-api"),
+    path("books/<slug:slug>/", BookDetailAPIView.as_view(), name="book-detail-api"),
 ]
