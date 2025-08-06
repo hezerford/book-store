@@ -9,19 +9,21 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     libpq-dev \
     gcc \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Устанавливаем Poetry
-RUN pip install --no-cache-dir poetry
+RUN curl -sSL https://install.python-poetry.org | python3 -
+ENV PATH="${PATH}:/root/.local/bin"
 
 # Копируем pyproject.toml и poetry.lock для установки зависимостей
-COPY pyproject.toml poetry.lock /app/
+COPY pyproject.toml poetry.lock* ./
 
-# Устанавливаем зависимости
+# Устанавливаем все зависимости (включая dev для разработки)
 RUN poetry config virtualenvs.create false && poetry install --no-root
 
 # Копируем всё содержимое проекта в контейнер
-COPY . /app
+COPY . .
 
 # Устанавливаем рабочую директорию для запуска manage.py
 WORKDIR /app/src
