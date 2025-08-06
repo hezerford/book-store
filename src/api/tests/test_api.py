@@ -43,7 +43,7 @@ def test_all_books_api(authenticated_API_client, create_three_books):
 @pytest.mark.django_db
 def test_book_detail_api(authenticated_API_client, create_book):
     book = create_book()
-    url = reverse("book-detail-api", kwargs={"pk": book.pk})
+    url = reverse("book-detail-api", kwargs={"slug": book.slug})
     response = authenticated_API_client.get(url)
 
     assert response.status_code == status.HTTP_200_OK
