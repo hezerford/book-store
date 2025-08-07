@@ -7,7 +7,11 @@
         <div class="row">
             <!-- Изображение книги -->
             <div class="col d-flex justify-content-center">
-                <img src="{{ book.photo.url }}" alt="{{ book.title }}" class="img-fluid">
+                {% if book.photo %}
+                    <img src="{{ book.photo.url }}" alt="{{ book.title }}" class="img-fluid">
+                {% else %}
+                    <img src="{% static 'img/default-book.png' %}" alt="{{ book.title }}" class="img-fluid">
+                {% endif %}
             </div>
     
             <!-- Описание книги -->
