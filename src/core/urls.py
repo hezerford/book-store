@@ -5,8 +5,6 @@ from django.conf import settings
 
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
-from debug_toolbar.toolbar import debug_toolbar_urls
-
 urlpatterns = [
     path("", include("store.urls")),
     path("api/", include("api.urls")),
