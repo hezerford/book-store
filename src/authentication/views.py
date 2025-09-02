@@ -9,6 +9,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from django.db import transaction
 
 from user_profile.models import UserProfile
+from cart.utils import merge_guest_cart_with_user_cart
 
 from .forms import RegisterUserForm, LoginUserForm
 
@@ -36,6 +37,10 @@ class RegisterUserView(UserPassesTestMixin, CreateView):
                 user,
                 backend="django.contrib.auth.backends.ModelBackend",
             )
+
+            # Сливаем гостевую корзину с корзиной нового пользователя
+            merge_guest_cart_with_user_cart(self.request, user)
+
             return redirect("home")
         except Exception as e:
             form.add_error(None, f"Error creating user: {str(e)}")
@@ -59,6 +64,16 @@ class LoginUserView(UserPassesTestMixin, LoginView):
             self.request.user.username if self.request.user.is_authenticated else None
         )
         return context
+
+    def form_valid(self, form):
+        """Вызывается после успешной валидации формы логина."""
+        response = super().form_valid(form)
+
+        # Сливаем гостевую корзину с корзиной пользователя
+        if self.request.user.is_authenticated:
+            merge_guest_cart_with_user_cart(self.request, self.request.user)
+
+        return response
 
     def get_success_url(self):
         return reverse_lazy("home")

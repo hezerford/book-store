@@ -30,6 +30,39 @@ class Cart(models.Model):
         self.session_key = None
         self.save()
 
+    # Слияние корзин при логине пользователя
+    def merge_with(self, other_cart):
+        """
+        Сливает товары из другой корзины в текущую.
+        Если товар уже есть - увеличивает количество.
+        """
+        if not other_cart or other_cart == self:
+            return
+
+        for other_item in other_cart.cartitem_set.all():
+            # Проверяем, есть ли уже такой товар в текущей корзине
+            existing_item = self.cartitem_set.filter(book=other_item.book).first()
+
+            if existing_item:
+                # Если товар уже есть - увеличиваем количество
+                existing_item.quantity += other_item.quantity
+                # Обновляем цену на актуальную (может изменилась скидка)
+                existing_item.price = other_item.book.get_final_price()
+                existing_item.save()
+            else:
+                # Если товара нет - создаем новый элемент корзины
+                CartItem.objects.create(
+                    cart=self,
+                    book=other_item.book,
+                    quantity=other_item.quantity,
+                    price=other_item.book.get_final_price(),
+                )
+
+        # Обновляем общие суммы корзины
+        self.total_price = self.get_total_price()
+        self.total_items = self.get_total_items()
+        self.save(update_fields=["total_price", "total_items"])
+
     # Получение цены в корзине
     def get_total_price(self):
         return sum(item.price * item.quantity for item in self.cartitem_set.all())
@@ -53,7 +86,7 @@ class CartItem(models.Model):
 
     def save(self, *args, **kwargs):
         if self.price is None:
-            self.price = self.book.discounted_price or self.book.price
+            self.price = self.book.get_final_price()
         super().save(*args, **kwargs)
 
     class Meta:

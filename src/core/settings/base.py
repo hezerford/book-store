@@ -56,6 +56,8 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.template.context_processors.csrf",
                 "django.contrib.messages.context_processors.messages",
+                # Custom context processors
+                "cart.context_processors.cart_items_count",
             ],
         },
     },
