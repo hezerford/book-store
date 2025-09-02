@@ -88,14 +88,6 @@ class Book(models.Model):
 
     def clean(self):
         """Валидация модели"""
-        if self.discounted_price and self.price:
-            if self.discounted_price >= self.price:
-                raise ValidationError(
-                    {
-                        "discounted_price": "Скидочная цена должна быть меньше обычной цены"
-                    }
-                )
-
         if self.title:
             self.title = self.title.strip()
         if self.author:
@@ -123,7 +115,13 @@ class Book(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title)
-        self.full_clean()  # Вызываем валидацию перед сохранением
+        # Нормализуем денежные значения до 2 знаков после запятой
+        if self.price is not None:
+            self.price = (Decimal(self.price)).quantize(Decimal("0.01"))
+        if self.discounted_price is not None:
+            self.discounted_price = (Decimal(self.discounted_price)).quantize(
+                Decimal("0.01")
+            )
         super().save(*args, **kwargs)
 
     class Meta:

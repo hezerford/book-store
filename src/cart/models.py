@@ -46,8 +46,6 @@ class Cart(models.Model):
             if existing_item:
                 # Если товар уже есть - увеличиваем количество
                 existing_item.quantity += other_item.quantity
-                # Обновляем цену на актуальную (может изменилась скидка)
-                existing_item.price = other_item.book.get_final_price()
                 existing_item.save()
             else:
                 # Если товара нет - создаем новый элемент корзины
@@ -55,7 +53,8 @@ class Cart(models.Model):
                     cart=self,
                     book=other_item.book,
                     quantity=other_item.quantity,
-                    price=other_item.book.get_final_price(),
+                    # Сохраняем цену из гостевой корзины, чтобы не изменять итоги
+                    price=other_item.price,
                 )
 
         # Обновляем общие суммы корзины
