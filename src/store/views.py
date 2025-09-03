@@ -1,6 +1,7 @@
-from pyexpat.errors import messages
+from django.contrib import messages
 from random import choice
 
+from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 from django.db.models import Prefetch, Q
 from django.views import View
@@ -20,6 +21,9 @@ from .forms import BookSearchForm, SubscriptionForm
 from .models import Book, Genre, Quote
 
 from cart.models import Cart, CartItem
+
+from reviews.forms import ReviewForm
+from reviews.models import Review
 
 
 class HomePage(ListView):
@@ -102,6 +106,31 @@ class BookDetailView(DetailView):
         context["old_price"] = book.price if book.discounted_price else None
         context["discounted_price"] = book.discounted_price or book.price
 
+        # Отзывы книги
+        reviews_qs = book.reviews.select_related("user").order_by("-created_at")
+
+        page_number = self.request.GET.get(
+            "reviews_page"
+        )  # направляет на ?reviews_page=2
+        paginator = Paginator(reviews_qs, 10)  # 10 отзывов на странице
+        reviews_page = paginator.get_page(page_number)  # получаем безопасно страницу
+
+        context["reviews_page"] = reviews_page  # объект страницы
+        context["reviews"] = reviews_page.object_list  # элементы текущей страницы
+
+        # Текущий отзыв пользователя и форма
+        user_review = None
+        if self.request.user.is_authenticated:
+            user_review = Review.objects.filter(
+                book=book, user=self.request.user
+            ).first()
+        context["user_review"] = user_review
+        context["review_form"] = (
+            ReviewForm()
+            if self.request.user.is_authenticated and not user_review
+            else None
+        )
+
         # Если пользователь авторизован, добавляем данные корзины и избранного
         if self.request.user.is_authenticated:
             try:
@@ -130,6 +159,44 @@ class BookDetailView(DetailView):
             context["in_cart"] = cart_item is not None
 
         return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        book = self.object
+        action = request.POST.get("action")
+
+        if not request.user.is_authenticated:
+            messages.error(request, "Нужно войти, чтобы оставить отзыв.")
+            return redirect("login")
+
+        if action == "create_review":
+            if Review.objects.filter(book=book, user=request.user).exists():
+                messages.warning(request, "Вы уже оставили отзыв на эту книгу.")
+            else:
+                form = ReviewForm(request.POST)
+                if form.is_valid():
+                    Review.objects.create(
+                        book=book,
+                        user=request.user,
+                        rating=form.cleaned_data["rating"],
+                        text=form.cleaned_data.get("text", ""),
+                    )
+                    messages.success(request, "Отзыв добавлен.")
+                else:
+                    messages.error(request, "Проверьте корректность формы отзыва.")
+
+        elif action == "delete_review":
+            review_id = request.POST.get("review_id")
+            review = Review.objects.filter(
+                id=review_id, book=book, user=request.user
+            ).first()
+            if review:
+                review.delete()
+                messages.success(request, "Отзыв удалён.")
+            else:
+                messages.error(request, "Отзыв не найден или у вас нет прав.")
+
+        return redirect("book-detail", book_slug=book.slug)
 
 
 class ToggleFavoriteView(LoginRequiredMixin, View):
