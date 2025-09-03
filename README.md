@@ -54,13 +54,7 @@ cp .env.example .env
 docker-compose up --build
 ```
 
-4. **Выполните миграции**
-
-```bash
-docker-compose exec web python manage.py migrate
-```
-
-5. **Создайте суперпользователя**
+4. **Создайте суперпользователя**
 
 ```bash
 docker-compose exec web python manage.py createsuperuser
