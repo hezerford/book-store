@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 from django.urls import reverse
 from django.utils.text import slugify
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -134,6 +135,13 @@ class Book(models.Model):
             models.Index(fields=["is_published"]),
             models.Index(fields=["price"]),
             models.Index(fields=["discounted_price"]),
+        ]
+        constraints = [
+            models.CheckConstraint(
+                name="discounted_lt_price_or_null",
+                check=Q(discounted_price__isnull=True)
+                | Q(discounted_price__lt=models.F("price")),
+            )
         ]
 
 
