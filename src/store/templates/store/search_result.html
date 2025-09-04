@@ -10,9 +10,9 @@
                     <div class="book-card">
                         <div class="card card-background">
                             {% if book.photo %}
-                            <img src="{{ book.photo.url }}" alt="">
+                                <img src="{{ book.photo.url }}" alt="">
                             {% else %}
-                            <img src="/static/img/default-book.png" alt="">
+                                <img src="/static/img/default-book.png" alt="">
                             {% endif %}
                         </div>
                         <p class="name-book mt-4">{{ book.title }}</p>

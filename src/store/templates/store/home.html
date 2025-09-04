@@ -36,9 +36,12 @@
                 </nav>
             </div>
             <div class="col-5 d-flex justify-content-center">
-                <img class="book-photo" src="{{ random_book.photo.url }}" alt="">
+                {% if random_book.photo %}
+                    <img class="book-photo" src="{{ random_book.photo.url }}" alt="">
+                {% else %}
+                    <img class="book-photo" src="{% static 'img/default-book.png' %}" alt="">
+                {% endif %}
             </div>
-            {% comment %} <div class="d-flex col-1 justify-content-center"><i class="fa-solid fa-arrow-right fa-xl arrow"></i></div> {% endcomment %}
         </div>
     </div>
 </section>
@@ -70,7 +73,11 @@
             <a class="text-decoration-none" href="{% url 'book-detail' book.slug %}">
                 <div class="book-card">
                     <div class="card card-background">
-                        <img src="{{book.photo.url}}" alt="">
+                        {% if book.photo %}
+                            <img src="{{ book.photo.url }}" alt="{{ book.title }}">
+                        {% else %}
+                            <img src="{% static 'img/default-book.png' %}" alt="{{ book.title }}">
+                        {% endif %}
                     </div>
                     <p class="name-book mt-4">{{ book.title }}</p>
                     <p class="author-book">{{ book.author }}</p>
@@ -163,7 +170,11 @@
                 <a class="text-decoration-none" href="{% url 'book-detail' book.slug %}">
                     <div class="book-card">
                         <div class="card card-background">
-                            <img src="{{book.photo.url}}" alt="">
+                            {% if book.photo %}
+                            <img src="{{ book.photo.url }}" alt="{{ book.title }}">
+                        {% else %}
+                            <img src="{% static 'img/default-book.png' %}" alt="{{ book.title }}">
+                        {% endif %}
                         </div>
                         <p class="name-book mt-4">{{ book.title }}</p>
                         <p class="author-book">{{ book.author }}</p>

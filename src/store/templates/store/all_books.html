@@ -9,8 +9,12 @@
             <a class="text-decoration-none" href="{% url 'book-detail' book.slug %}">
                 <div class="book-card">
                     <div class="card card-background">
-                        <img src="{{book.photo.url}}" alt="">
-                    </div>
+                        {% if book.photo %}
+                            <img src="{{ book.photo.url }}" alt="{{ book.title }}">
+                        {% else %}
+                            <img src="{% static 'img/default-book.png' %}" alt="{{ book.title }}">
+                        {% endif %}
+                </div>
                     <p class="name-book mt-4">{{ book.title }}</p>
                     <p class="author-book">{{ book.author }}</p>
                     {% if book.discounted_price %}
