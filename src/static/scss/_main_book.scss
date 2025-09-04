@@ -27,6 +27,11 @@
 
 
     .book-photo {
+        max-width: 560px;
+        max-height: 680px;
+        width: 100%;
+        height: auto;
+        object-fit: contain;
         filter: drop-shadow(2px 4px 30px rgba(115, 114, 109, 0.25));
     }
 
