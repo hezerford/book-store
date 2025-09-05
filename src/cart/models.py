@@ -1,4 +1,5 @@
 from django.db import models
+from django.db import transaction
 from django.contrib.auth.models import User
 
 from store.models import Book
@@ -39,28 +40,33 @@ class Cart(models.Model):
         if not other_cart or other_cart == self:
             return
 
-        for other_item in other_cart.cartitem_set.all():
-            # Проверяем, есть ли уже такой товар в текущей корзине
-            existing_item = self.cartitem_set.filter(book=other_item.book).first()
-
-            if existing_item:
-                # Если товар уже есть - увеличиваем количество
-                existing_item.quantity += other_item.quantity
-                existing_item.save()
-            else:
-                # Если товара нет - создаем новый элемент корзины
-                CartItem.objects.create(
-                    cart=self,
-                    book=other_item.book,
-                    quantity=other_item.quantity,
-                    # Сохраняем цену из гостевой корзины, чтобы не изменять итоги
-                    price=other_item.price,
+        with transaction.atomic():
+            for other_item in other_cart.cartitem_set.select_for_update():
+                # Проверяем, есть ли уже такой товар в текущей корзине
+                existing_item = (
+                    self.cartitem_set.select_for_update()
+                    .filter(book=other_item.book)
+                    .first()
                 )
 
-        # Обновляем общие суммы корзины
-        self.total_price = self.get_total_price()
-        self.total_items = self.get_total_items()
-        self.save(update_fields=["total_price", "total_items"])
+                if existing_item:
+                    # Если товар уже есть - увеличиваем количество
+                    existing_item.quantity += other_item.quantity
+                    existing_item.save(update_fields=["quantity"])
+                else:
+                    # Если товара нет - создаем новый элемент корзины
+                    CartItem.objects.create(
+                        cart=self,
+                        book=other_item.book,
+                        quantity=other_item.quantity,
+                        # Сохраняем цену из гостевой корзины, чтобы не изменять итоги
+                        price=other_item.price,
+                    )
+
+            # Обновляем общие суммы корзины
+            self.total_price = self.get_total_price()
+            self.total_items = self.get_total_items()
+            self.save(update_fields=["total_price", "total_items"])
 
     # Получение цены в корзине
     def get_total_price(self):
