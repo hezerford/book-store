@@ -139,7 +139,7 @@ class Book(models.Model):
         constraints = [
             models.CheckConstraint(
                 name="discounted_lt_price_or_null",
-                check=Q(discounted_price__isnull=True)
+                condition=Q(discounted_price__isnull=True)
                 | Q(discounted_price__lt=models.F("price")),
             )
         ]

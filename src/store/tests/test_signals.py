@@ -2,7 +2,6 @@ import pytest
 from unittest.mock import patch
 from django.core.cache import cache
 from store.models import Book, Subscription
-from store.tasks import send_new_book_email_task
 from django.db import transaction
 
 
@@ -33,7 +32,7 @@ def test_clear_book_cache_signal(create_book):
 
 
 @pytest.mark.django_db
-@patch("store.tasks.send_new_book_email_task.delay")
+@patch("store.tasks.send_new_book_notification_task.delay")
 def test_send_new_book_notification_signal(
     mock_send_task, create_subscription, create_book
 ):
@@ -49,15 +48,5 @@ def test_send_new_book_notification_signal(
     # Создаем книгу
     book = create_book(title="New Book")
 
-    # Проверяем вызов задачи
-    mock_send_task.assert_called_once()
-    task_args = mock_send_task.call_args[0]
-
-    # Проверяем аргументы задачи
-    assert task_args[0] == "New Book", "Book title is incorrect."
-    assert book.get_absolute_url() in task_args[1], "Book URL is incorrect."
-    assert "user1@example.com" in task_args[2], "Email list is incorrect."
-    assert "user3@example.com" in task_args[2], "Email list is incorrect."
-    assert (
-        "user2@example.com" not in task_args[2]
-    ), "Inactive subscribers should not receive emails."
+    # Проверяем, что задача Celery вызвана ровно один раз с ID книги
+    mock_send_task.assert_called_once_with(book.pk)
