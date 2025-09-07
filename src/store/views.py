@@ -3,13 +3,12 @@ from random import choice
 
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
-from django.db.models import Prefetch, Q
+from django.db.models import Avg, Count, Prefetch, Q
 from django.views import View
 from django.views.generic import ListView, DetailView
 
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-from django.views.decorators.vary import vary_on_headers
 from django.core.cache import cache
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -130,6 +129,11 @@ class BookDetailView(DetailView):
             if self.request.user.is_authenticated and not user_review
             else None
         )
+
+        # Средний рейтинг книги и количества отзывов
+        agg = book.reviews.aggregate(avg=Avg("rating"), cnt=Count("id"))
+        context["avg_rating"] = round(agg["avg"] or 0, 1)
+        context["reviews_count"] = agg["cnt"] or 0
 
         # Если пользователь авторизован, добавляем данные корзины и избранного
         if self.request.user.is_authenticated:

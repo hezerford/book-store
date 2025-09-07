@@ -29,6 +29,15 @@
                         <p class="price">$ {{ book.price }}</p>
                     {% endif %}
                 </div>
+                
+                {% if reviews_count > 0 %}
+                    <div class="d-flex align-items-center mb-2">
+                        <span title="Средний рейтинг">★ {{ avg_rating|floatformat:1 }}</span>
+                        <span class="text-muted ms-2">({{ reviews_count }})</span>
+                    </div>
+                {% else %}
+                    <p>This book has no reviews.</p>
+                {% endif %}
     
                 <!-- Описание книги -->
                 <p class="description mb-3">{{ book.description }}</p>
@@ -48,11 +57,6 @@
                 <!-- Кнопки -->
                 {% if book.is_published %}
                     <div class="d-flex gap-3">
-                        <!-- Добавить в корзину -->
-                        {% comment %} <form action="{% if user.is_authenticated %}{% url 'add-to-cart' book.slug %}{% else %}{% url 'login' %}{% endif %}" method="post">
-                            {% csrf_token %}
-                            <button class="btn btn-primary">Add to cart</button>
-                        </form> {% endcomment %}
 
                         <form action="{% url 'add-to-cart' book.slug %}" method="post">
                             {% csrf_token %}
