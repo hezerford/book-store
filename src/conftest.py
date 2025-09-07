@@ -24,9 +24,19 @@ def media_storage(settings, tmpdir):
 @pytest.fixture
 def create_book():
     def _create_book(**kwargs):
-        # Только устанавливаем разумные значения, если они не заданы
-        kwargs.setdefault("price", 20.00)
-        kwargs.setdefault("discounted_price", 15.00)
+        # Безопасные значения по умолчанию и корректировка скидки под CheckConstraint
+        price = kwargs.get("price", 20.00)
+        kwargs["price"] = price
+
+        if "discounted_price" not in kwargs:
+            # По умолчанию без скидки
+            kwargs["discounted_price"] = None
+        else:
+            dp = kwargs.get("discounted_price")
+            if dp is not None and dp >= price:
+                # Корректируем скидку, чтобы соблюсти ограничение БД
+                kwargs["discounted_price"] = round(float(price) - 0.01, 2)
+
         return mixer.blend(Book, **kwargs)
 
     return _create_book
@@ -35,7 +45,13 @@ def create_book():
 @pytest.fixture
 def create_three_books():
     def _create_books():
-        return mixer.cycle(3).blend(Book, photo="/static/img/default-book.png")
+        # Явно задаём валидные значения, чтобы не нарушать констрейнт
+        return mixer.cycle(3).blend(
+            Book,
+            price=20.00,
+            discounted_price=None,
+            photo="/static/img/default-book.png",
+        )
 
     return _create_books
 
