@@ -27,10 +27,9 @@ class RegisterUserView(UserPassesTestMixin, CreateView):
         return context
 
     @transaction.atomic
-    def form_valid(self, form):  # Убран лишний параметр request
+    def form_valid(self, form):
         try:
-            # Передаем request через self.request
-            user = form.save(request=self.request)
+            user = form.save()
             UserProfile.objects.create(user=user)
             login(
                 self.request,
@@ -82,5 +81,4 @@ class LoginUserView(UserPassesTestMixin, LoginView):
 class LogoutUserView(LogoutView):
     next_page = reverse_lazy("home")
 
-    # Если хотите, чтобы logout работал по GET запросу:
     http_method_names = ["get", "post", "options"]  # Разрешаем GET

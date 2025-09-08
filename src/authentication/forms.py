@@ -33,6 +33,10 @@ class RegisterUserForm(UserCreationForm):
         widget=forms.PasswordInput(attrs={"class": "form-input"}),
     )
 
+    captcha = CaptchaField(
+        label="Enter Captcha", error_messages={"invalid": "Invalid captcha"}
+    )
+
     class Meta:
         model = User
         fields = ("username", "password1", "password2")
