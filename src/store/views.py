@@ -17,12 +17,14 @@ from user_profile.forms import FavoriteBooksForm
 from user_profile.models import UserProfile
 from .forms import BookSearchForm, SubscriptionForm
 
-from .models import Book, Genre, Quote
+from .models import Book, Genre, Quote, Subscription
 
 from cart.models import Cart, CartItem
 
 from reviews.forms import ReviewForm
 from reviews.models import Review
+
+from django.core import signing
 
 
 class HomePage(ListView):
@@ -282,4 +284,20 @@ class SubscribeToMailing(View):
             messages.success(request, "Вы успешно подписались на рассылку!")
         else:
             messages.error(request, "Произошла ошибка. Проверьте введенные данные.")
+        return redirect("home")
+
+
+class UnsubscribeView(View):
+    http_method_names = ["get"]
+
+    def get(self, request):
+        token = request.GET.get("t")
+        try:
+            email = signing.loads(token, salt="unsubscribe", max_age=7 * 24 * 3600)
+        except (signing.BadSignature, signing.SignatureExpired):
+            messages.error(request, "Invalid or expired unsubscribe link.")
+            return redirect("home")
+
+        Subscription.objects.filter(email=email).update(is_active=False)
+        messages.success(request, "You have been unsubscribed.")
         return redirect("home")

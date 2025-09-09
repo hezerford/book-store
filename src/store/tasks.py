@@ -1,6 +1,8 @@
 from celery import shared_task
 from django.core.mail import send_mail
 from django.conf import settings
+from django.core import signing
+from django.urls import reverse
 
 
 @shared_task
@@ -17,19 +19,18 @@ def send_new_book_notification_task(book_id: int) -> int:
     subscribers = Subscription.objects.filter(is_active=True).values_list(
         "email", flat=True
     )
-    email_list = list(subscribers)
-    if not email_list:
-        return 0
+    count = 0
 
     subject = f"New Book Added: {book.title}"
-    message = f"We've added a new book: {book.title}. Check it out here: {settings.SITE_URL}{book.get_absolute_url()}"
+    base_message = f"We've added a new book: {book.title}. Check it out here: {settings.SITE_URL}{book.get_absolute_url()}"
 
-    send_mail(
-        subject,
-        message,
-        settings.DEFAULT_FROM_EMAIL,
-        email_list,
-        fail_silently=False,
-    )
+    for email in subscribers:
+        token = signing.dumps(email, salt="unsubscribe")
+        unsubscribe_link = f"{settings.SITE_URL}{reverse('unsubscribe')}?={token}"
+        message = f"{base_message}\n\nTo unsubscribe: {unsubscribe_link}"
+        send_mail(
+            subject, message, settings.DEFAULT_FROM_EMAIL, [email], fail_silently=False
+        )
+        count += 1
 
-    return len(email_list)
+    return count
