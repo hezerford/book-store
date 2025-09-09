@@ -5,6 +5,7 @@ from .views import (
     ToggleFavoriteView,
     BookSearchView,
     AllBooks,
+    UnsubscribeView,
 )
 
 urlpatterns = [
@@ -22,4 +23,5 @@ urlpatterns = [
         name="remove-from-favorites",
     ),
     path("books/", AllBooks.as_view(), name="all-books"),
+    path("unsubscribe/", UnsubscribeView.as_view(), name="unsubscribe"),
 ]
