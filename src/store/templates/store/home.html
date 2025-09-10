@@ -9,7 +9,6 @@
 <section id="home" class="d-flex align-items-center justify-content-between pt-3">
     <div class="container-fluid">
         <div class="row align-items-center main-books">
-            {% comment %} <div class="col-1"><i class="fa-solid fa-arrow-left fa-xl arrow"></i></div> {% endcomment %}
             <div class="col-7">
                 <div class="name">{{ random_book.title }}</div>
                 <p class="description">{{ random_book.description|truncatechars:500 }}</p>
@@ -116,7 +115,6 @@
 </section>
 
 {% comment %} Самая продаваемая книга {% endcomment %}
-# TODO: В работе
 <section id="best-selling" class="d-flex align-items-center">
     <div class="container">
         <div class="row d-flex justify-content-center">
@@ -165,7 +163,7 @@
                 <a href="#" class="category">Fictional</a>
             </div>
         </div>
-        <div class="d-flex cards justify-content-between flex-direction-row flex-nowrap">
+        <div class="d-flex cards justify-content-center flex-wrap mt-4" style="gap: 2rem; padding: 0 2rem;">
             {% for book in pop_books %}
                 <a class="text-decoration-none" href="{% url 'book-detail' book.slug %}">
                     <div class="book-card">
@@ -212,12 +210,15 @@
             </div>
             <div class="col">
                 <p class="description mb-5">Sed eu feugiat amet, libero ipsum enim pharetra hac dolor sit amet, consectetur. Elit adipiscing enim pharetra hac.</p>
-                <form method="post" class="d-flex">
+                <form method="post" class="subscription-form">
                     {% csrf_token %}
-                    {{ subscription_form.email }}
-                    <button type="submit" class="send mb-0">Send <i class="fa-regular fa-paper-plane"></i></button>
+                    <div class="input-group">
+                        {{ subscription_form.email }}
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa-regular fa-paper-plane"></i> Subscribe
+                        </button>
+                    </div>
                 </form>
-                <hr style="width: 400px;">
             </div>
         </div>
     </div>

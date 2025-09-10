@@ -91,7 +91,7 @@
             <div class="review">
                 <strong>{{ review.user.username }}</strong> — ★ {{ review.rating }}/5
                 <div class="text-muted small">{{ review.created_at }}</div>
-                <p>{{ review.text|linebreaksbr }}</p>
+                <span>{{ review.text|linebreaksbr }}</span>
             </div>
         {% empty %}
             <p>Пока нет отзывов.</p>
