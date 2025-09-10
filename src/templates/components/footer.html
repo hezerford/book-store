@@ -21,11 +21,11 @@
             <div class="col">
                 <h5>Discover</h5>
                 <ul class="nav flex-column mb-5">
-                    <li class="nav-item footer-article"><a href="#" class="nav-link p-0 text-muted">Home</a></li>
-                    <li class="nav-item footer-article"><a href="#" class="nav-link p-0 text-muted">Books</a></li>
+                    <li class="nav-item footer-article"><a href="{% url 'home' %}" class="nav-link p-0 text-muted">Home</a></li>
+                    <li class="nav-item footer-article"><a href="{% url 'all-books' %}" class="nav-link p-0 text-muted">Books</a></li>
                     <li class="nav-item footer-article"><a href="#" class="nav-link p-0 text-muted">Author</a></li>
                     <li class="nav-item footer-article"><a href="#" class="nav-link p-0 text-muted">Subjects</a></li>
-                    <li class="nav-item footer-article"><a href="#" class="nav-link p-0 text-muted">Advanced Search</a></li>
+                    <li class="nav-item footer-article"><a href="{% url 'book-search' %}" class="nav-link p-0 text-muted">Advanced Search</a></li>
                 </ul>
             </div>
             <div class="col">

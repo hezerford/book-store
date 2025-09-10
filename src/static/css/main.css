@@ -22,9 +22,11 @@
 .cards .book-card {
   padding-left: 39px;
 }
+
 .cards .book-card:first-child {
   padding-left: 0px;
 }
+
 .cards .book-card .card-background {
   background: #EFEEE8;
   border: 1px solid #EAE8DF;
@@ -32,6 +34,7 @@
   height: 437px;
   border-radius: 0;
 }
+
 .cards .book-card .name-book {
   font-family: "Prata", serif;
   font-size: 22px;
@@ -41,9 +44,11 @@
   color: #111111;
   transition: 0.3s;
 }
+
 .cards .book-card .name-book:hover {
   color: #74642F;
 }
+
 .cards .book-card .author-book {
   font-size: 14px;
   line-height: 18px;
@@ -52,6 +57,7 @@
   text-transform: capitalize;
   color: #888888;
 }
+
 .cards .book-card .price {
   font-family: "Prata", serif;
   font-size: 18px;
@@ -63,6 +69,7 @@
   transition: 0.3s;
   margin-bottom: 55px;
 }
+
 .cards .book-card .price:hover {
   color: #74642F;
 }
@@ -76,6 +83,7 @@
   height: 37px;
   transition: 0.1s;
 }
+
 .footer-article:hover {
   color: #111111;
 }
@@ -141,6 +149,7 @@ h5 {
   text-transform: uppercase;
   color: #777777;
 }
+
 .nav-link:hover {
   color: #74642F;
 }
@@ -149,6 +158,7 @@ h5 {
   padding-top: 20px;
   padding-bottom: 20px;
 }
+
 .navbar .vert-line {
   border-left: 1px solid #E0E0E0;
   height: 16px;
@@ -156,6 +166,7 @@ h5 {
   margin-right: 25px;
   margin-top: 8px;
 }
+
 .navbar .hr-category {
   margin-top: 8px;
   border: 1px solid #9A884C;
@@ -166,6 +177,7 @@ h5 {
 .main-books {
   margin-top: 208px;
 }
+
 .main-books .name {
   font-family: "Prata", serif;
   font-size: 73px;
@@ -175,6 +187,7 @@ h5 {
   color: #222222;
   margin-top: 96px;
 }
+
 .main-books .description {
   font-size: 16px;
   line-height: 220%;
@@ -182,15 +195,17 @@ h5 {
   color: #7A7A7A;
   margin-bottom: 75px;
 }
+
 .main-books .book-photo {
   max-width: 560px;
   max-height: 680px;
   width: 100%;
   height: auto;
   -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
   filter: drop-shadow(2px 4px 30px rgba(115, 114, 109, 0.25));
 }
+
 .main-books .arrow {
   cursor: pointer;
 }
@@ -206,6 +221,7 @@ h5 {
   margin-bottom: 126px;
   transition: 0.2s;
 }
+
 .read-more:hover {
   border: 1px solid #0A0A0A;
   background: #111111;
@@ -215,6 +231,7 @@ h5 {
 .pagination {
   align-items: center;
 }
+
 .pagination .all-products {
   font-weight: bold;
   line-height: 20px;
@@ -223,25 +240,31 @@ h5 {
   text-transform: capitalize;
   color: #111111;
 }
+
 .pagination .mr-circle {
   margin-right: 30px;
 }
+
 .pagination .mr-circle-active {
   margin-right: 30px;
 }
+
 .pagination .mr-circle .circle-head {
   width: 30px;
   height: 30px;
   border-radius: 100%;
   border: 1px solid #D7D5CC;
 }
+
 .pagination .mr-circle .circle-head .fa-circle {
   color: #74642F;
 }
+
 .pagination .mr-circle .circle-head .circle {
   color: #D7D5CC;
   font-size: 10px;
 }
+
 .pagination .mr-circle .circle-head .circle-active {
   font-size: 10px;
   color: #74642F;
@@ -313,6 +336,7 @@ h5 {
   text-align: start;
   margin-top: 80px;
 }
+
 .best-selling-author {
   font-weight: 500;
   font-size: 13px;
@@ -349,6 +373,7 @@ h5 {
   color: #111111;
   text-decoration: none;
 }
+
 .shop-now:hover {
   color: #74642F;
 }
@@ -371,13 +396,16 @@ h5 {
   text-decoration: none;
   color: #7A7A7A;
 }
+
 .category:hover {
   color: #111;
 }
+
 .category-active {
   font-weight: bold;
   color: #111;
 }
+
 .category-block {
   margin-right: 50px;
 }
@@ -389,6 +417,7 @@ h5 {
   text-align: center;
   color: #7A7A7A;
 }
+
 .quote-author {
   font-family: "Prata", serif;
   font-size: 22px;
@@ -397,6 +426,7 @@ h5 {
   text-transform: capitalize;
   color: #111111;
 }
+
 .quote-percent {
   padding-top: 4px;
   padding-left: 9px;
@@ -420,6 +450,38 @@ h5 {
   outline: none;
   width: 255px;
   height: 31px;
+}
+
+.subscription-form {
+  max-width: 400px;
+}
+
+.subscription-form .input-group {
+  display: flex;
+  border-radius: 25px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.subscription-form input[type="email"] {
+  flex: 1;
+  padding: 12px 20px;
+  border: none;
+  outline: none;
+  font-size: 16px;
+}
+
+.subscription-form button {
+  padding: 12px 20px;
+  border: none;
+  background: #007bff;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.subscription-form button:hover {
+  background: #0056b3;
 }
 
 .send {
@@ -454,6 +516,9 @@ h5 {
 .profile-btn {
   color: #000;
 }
+
 .profile-btn:hover {
   color: #fff;
-}/*# sourceMappingURL=main.css.map */
+}
+
+/*# sourceMappingURL=main.css.map */
