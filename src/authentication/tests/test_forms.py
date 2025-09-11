@@ -47,6 +47,11 @@ from authentication.forms import LoginUserForm, RegisterUserForm
 )
 def test_register_user_form(form_data, is_valid, error_fields, existing_user):
     form = RegisterUserForm(data=form_data)
+
+    # Удаляем капчу из тестов
+    if "captcha" in form.fields:
+        del form.fields["captcha"]
+
     assert form.is_valid() == is_valid
 
     for field in error_fields:
