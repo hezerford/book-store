@@ -26,6 +26,8 @@ from reviews.models import Review
 
 from django.core import signing
 
+from django_ratelimit.decorators import ratelimit
+
 
 class HomePage(ListView):
     model = Book
@@ -268,6 +270,9 @@ class AllBooks(ListView):
         return context
 
 
+@method_decorator(
+    ratelimit(key="ip", rate="10/5m", method="POST", block=True), name="post"
+)
 class SubscribeToMailing(View):
     """Подписка на рассылку."""
 

@@ -13,7 +13,13 @@ from cart.utils import merge_guest_cart_with_user_cart
 
 from .forms import RegisterUserForm, LoginUserForm
 
+from django_ratelimit.decorators import ratelimit
+from django.utils.decorators import method_decorator
 
+
+@method_decorator(
+    ratelimit(key="user_or_ip", rate="5/m", method="POST", block=True), name="post"
+)
 class RegisterUserView(UserPassesTestMixin, CreateView):
     form_class = RegisterUserForm
     template_name = "authentication/register.html"
@@ -49,6 +55,9 @@ class RegisterUserView(UserPassesTestMixin, CreateView):
         return reverse_lazy("home")
 
 
+@method_decorator(
+    ratelimit(key="user_or_ip", rate="10/m", method="POST", block=True), name="post"
+)
 class LoginUserView(UserPassesTestMixin, LoginView):
     form_class = LoginUserForm
     template_name = "authentication/login.html"
