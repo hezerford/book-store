@@ -29,3 +29,9 @@ CACHES = {
         "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
     }
 }
+
+# DRF throttling: ослабляем лимиты в тестах, чтобы не мешали
+REST_FRAMEWORK["DEFAULT_THROTTLE_RATES"] = {
+    "anon": "1000/min",
+    "user": "2000/min",
+}

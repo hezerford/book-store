@@ -116,6 +116,16 @@ REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
+    "DEFAULT_THROTTLE_CLASSES": [
+        "rest_framework.throttling.AnonRateThrottle",
+        "rest_framework.throttling.UserRateThrottle",
+    ],
+    "DEFAULT_THROTTLE_RATES": {
+        # Гости: не более 60 запросов в минуту
+        "anon": "60/min",
+        # Авторизованные: не более 120 запросов в минуту
+        "user": "120/min",
+    },
 }
 
 SPECTACULAR_SETTINGS = {
