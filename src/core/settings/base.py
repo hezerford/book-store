@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     "captcha",
     "axes",
     "drf_spectacular",
+    "imagekit",
     # apps
     "store.apps.StoreConfig",
     "authentication.apps.AuthenticationConfig",

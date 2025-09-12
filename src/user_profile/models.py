@@ -6,6 +6,9 @@ from django.core.validators import RegexValidator
 
 from store.models import Book
 
+from imagekit.models import ProcessedImageField
+from imagekit.processors import ResizeToFill
+
 
 def user_profile_path(instance, filename):
     return f"profile_pictures/{instance.user.username}/{filename}"
@@ -34,8 +37,13 @@ class UserProfile(models.Model):
         validators=[phone_regex], max_length=17, blank=True, null=True
     )  # Validators should be a list
 
-    profile_picture = models.ImageField(
-        upload_to=user_profile_path, blank=True, null=True
+    profile_picture = ProcessedImageField(
+        upload_to=user_profile_path,
+        processors=[ResizeToFill(600, 600)],
+        format="JPEG",
+        options={"quality": 85},
+        blank=True,
+        null=True,
     )
 
     is_active = models.BooleanField(default=True)

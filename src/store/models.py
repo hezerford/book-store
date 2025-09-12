@@ -4,7 +4,11 @@ from django.urls import reverse
 from django.utils.text import slugify
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.exceptions import ValidationError
+
 from decimal import Decimal
+
+from imagekit.models import ProcessedImageField
+from imagekit.processors import ResizeToFill
 
 
 class Genre(models.Model):
@@ -37,8 +41,11 @@ class Book(models.Model):
             MinValueValidator(Decimal("0.01"), message="Цена должна быть больше 0")
         ],
     )
-    photo = models.ImageField(
+    photo = ProcessedImageField(
         upload_to="book_covers/%Y/%m/%d/",
+        processors=[ResizeToFill(800, 800)],
+        format="JPEG",
+        options={"quality": 85},
         verbose_name="Фото книги",
         blank=True,
         null=True,
