@@ -15,8 +15,12 @@ services:
     environment:
       - DJANGO_SETTINGS_MODULE=core.settings.development
     depends_on:
-      - postgres
-      - redis
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      elasticsearch:
+        condition: service_healthy
   # restart: unless-stopped # Для production
 
   redis:
@@ -24,6 +28,11 @@ services:
     container_name: redis_cache
     ports:
       - "6380:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
   # restart: unless-stopped
 
   celery:
@@ -38,8 +47,12 @@ services:
       - DJANGO_SETTINGS_MODULE=core.settings.base
       - CELERY_BROKER_URL=redis://redis:6379/0
     depends_on:
-      - postgres
-      - redis
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
     env_file:
       - .env
   # restart: unless-stopped
@@ -56,9 +69,12 @@ services:
       - DJANGO_SETTINGS_MODULE=core.settings.base
       - CELERY_BROKER_URL=redis://redis:6379/0
     depends_on:
-      - redis
-      - postgres  
-      - celery
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      celery:
+        condition: service_started
     env_file:
       - .env
 
@@ -74,6 +90,29 @@ services:
       POSTGRES_DB: ${DB_NAME}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    
+  elasticsearch:
+    image: elasticsearch:8.11.0
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
 volumes:
   postgres_data:
+  elasticsearch_data:  # Добавлен недостающий volume
