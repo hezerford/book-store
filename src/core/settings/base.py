@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     "axes",
     "drf_spectacular",
     "imagekit",
+    "django_elasticsearch_dsl",
     # apps
     "store.apps.StoreConfig",
     "authentication.apps.AuthenticationConfig",
