@@ -14,6 +14,7 @@ services:
       - .env
     environment:
       - DJANGO_SETTINGS_MODULE=core.settings.development
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
     depends_on:
       postgres:
         condition: service_healthy
@@ -44,8 +45,9 @@ services:
       - .:/app
     working_dir: /app/src
     environment:
-      - DJANGO_SETTINGS_MODULE=core.settings.base
+      - DJANGO_SETTINGS_MODULE=core.settings.development
       - CELERY_BROKER_URL=redis://redis:6379/0
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
     depends_on:
       postgres:
         condition: service_healthy
@@ -66,8 +68,9 @@ services:
       - .:/app
     working_dir: /app/src
     environment:
-      - DJANGO_SETTINGS_MODULE=core.settings.base
+      - DJANGO_SETTINGS_MODULE=core.settings.development
       - CELERY_BROKER_URL=redis://redis:6379/0
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
     depends_on:
       redis:
         condition: service_healthy
