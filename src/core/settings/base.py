@@ -154,3 +154,9 @@ DEFAULT_FROM_EMAIL = "Book Store <your_email@example.com>"
 CAPTCHA_LENGTH = 5
 CAPTCHA_FONT_SIZE = 30
 CAPTCHA_IMAGE_SIZE = (120, 60)
+
+ELASTICSEARCH_DSL = {
+    "default": {
+        "hosts": os.getenv("ELASTICSEARCH_URL", "http://localhost:9200"),
+    },
+}
