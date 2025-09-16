@@ -1,6 +1,10 @@
-# BookStore - Django Book Store Application
+# BookStore — Django Book Store Application
 
-Современное веб-приложение для книжного магазина, построенное на Django с использованием REST API, Docker и Celery.
+Современное веб‑приложение книжного магазина на Django с REST API, Docker, Celery и продвинутым поиском (Elasticsearch).
+
+![Python](https://img.shields.io/badge/Python-3.12-blue)
+![Django](https://img.shields.io/badge/Django-5.1-green)
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 
 ## 🚀 Функциональность
 
@@ -13,18 +17,18 @@
 - **Безопасность** с защитой от брутфорс-атак и CAPTCHA
 - **Фоновые задачи** с Celery
 - **Кэширование** с Redis
+- **Поиск** c автодополнением на ElasticSearch
 
 ## 🛠 Технологии
 
-- **Backend**: Django 5.1.4, Python 3.12
-- **Database**: PostgreSQL
-- **Cache**: Redis
-- **API**: Django REST Framework
-- **Documentation**: drf-spectacular (Swagger)
-- **Testing**: pytest, pytest-django
-- **Containerization**: Docker, docker-compose
-- **Task Queue**: Celery
-- **Security**: django-axes, django-simple-captcha
+- Backend: Django 5.1, Python 3.12
+- Database: PostgreSQL
+- Cache/Broker: Redis
+- API: Django REST Framework, drf-spectacular (Swagger)
+- Queue: Celery (+ django-celery-beat/results)
+- Search: Elasticsearch 8
+- Testing: pytest, pytest-django
+- Containers: Docker, docker-compose
 
 ## 📋 Требования
 
@@ -32,119 +36,122 @@
 - Docker и docker-compose
 - Poetry (для локальной разработки)
 
-## 🚀 Быстрый старт с Docker
+## ⚙️ Окружения и переменные
 
-1. **Клонируйте репозиторий**
+- Окружения: `development`, `production`, `testing` (через `DJANGO_SETTINGS_MODULE`)
+- Важные переменные (`.env`):
+  - Django: `DJANGO_SETTINGS_MODULE`, `SECRET_KEY`, `SITE_URL`
+  - DB: `DB_NAME`, `DB_USER`, `DB_PASS`, `DB_HOST`, `DB_PORT`
+  - Redis/Celery: `REDIS_URL`, `CELERY_BROKER_URL`
+  - Email: `SMTP_EMAIL`, `SMTP_PASS`
+  - Search: `ELASTICSEARCH_URL`
 
-```bash
-git clone https://github.com/hezerford/book-store
-cd BookStore
-```
-
-2. **Создайте файл .env**
+Создайте `.env` из примера:
 
 ```bash
 cp .env.example .env
-# Отредактируйте .env файл с вашими настройками
+# Отредактируйте значения под своё окружение
 ```
 
-3. **Запустите с Docker**
+## 🚀 Быстрый старт (Docker)
 
 ```bash
-docker-compose up --build
-```
-
-4. **Создайте суперпользователя**
-
-```bash
+cp .env.example .env
+docker-compose up --build -d
+# Применить миграции и собрать статику
+docker-compose exec web python manage.py migrate
+docker-compose exec web python manage.py collectstatic --noinput
+# Создать суперпользователя
 docker-compose exec web python manage.py createsuperuser
+# (Опционально) Индекс Elasticsearch
+docker-compose exec web python manage.py search_index --create
+docker-compose exec web python manage.py search_index --populate
 ```
 
-Приложение будет доступно по адресу: http://localhost:8000
+Приложение: `http://localhost:8000`
+
+Swagger: `http://localhost:8000/api/docs/`
 
 ## 🔧 Локальная разработка
 
-1. **Установите Poetry**
-
-```bash
-curl -sSL https://install.python-poetry.org | python3 -
-```
-
-2. **Установите зависимости**
-
 ```bash
 poetry install
+cp .env.example .env  # укажите локальные значения (например, DB_HOST=localhost)
+poetry run python src/manage.py migrate
+poetry run python src/manage.py runserver
+
+# Celery (в отдельных терминалах)
+poetry run celery -A core worker -l info
+poetry run celery -A core beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
 ```
 
-3. **Активируйте виртуальное окружение**
+## 🔎 Поиск (Elasticsearch)
+
+Elasticsearch поднимается сервисом Docker. После старта:
 
 ```bash
-poetry shell
+docker-compose exec web python manage.py search_index --delete   # при необходимости
+docker-compose exec web python manage.py search_index --create
+docker-compose exec web python manage.py search_index --populate
 ```
 
-4. **Настройте базу данных**
+Веб‑поиск доступен по маршруту `search/`. Для автодополнения используется JSON‑режим:
 
-```bash
-# Установите PostgreSQL и Redis
-# Создайте .env файл с настройками БД
 ```
-
-5. **Выполните миграции**
-
-```bash
-python manage.py migrate
-```
-
-6. **Запустите сервер разработки**
-
-```bash
-python manage.py runserver
+GET /search/?format=json&query=...
 ```
 
 ## 🧪 Тестирование
 
 ```bash
-# Запуск всех тестов
+# Все тесты
 pytest
 
-# Запуск с покрытием
+# С покрытием
 pytest --cov=src
 
-# Запуск конкретного теста
-pytest src/store/tests/test_views.py::test_homepage_view
+# Конкретный тест
+pytest src/store/tests/test_views.py::test_homepage_view -q
 ```
+
+В тестовом окружении используются SQLite, локальная почта (`locmem`), Celery eager‑режим. Elasticsearch в тестах опционален.
 
 ## 📚 API Документация
 
-После запуска приложения API документация доступна по адресам:
-
-- Swagger UI: http://localhost:8000/api/docs/
-- Schema: http://localhost:8000/api/schema/
+- Swagger UI: `http://localhost:8000/api/docs/`
+- OpenAPI schema: `http://localhost:8000/api/schema/`
 
 ## 🏗 Структура проекта
 
 ```
 BookStore/
 ├── src/
-│   ├── api/           # REST API
+│   ├── api/            # REST API
 │   ├── authentication/ # Аутентификация
-│   ├── cart/          # Корзина покупок
-│   ├── core/          # Основные настройки
-│   ├── store/         # Основная логика магазина
-│   ├── user_profile/  # Профили пользователей
-│   └── templates/     # Шаблоны
-├── static/            # Статические файлы
-├── docker-compose.yml # Docker конфигурация
-└── pyproject.toml    # Зависимости Poetry
+│   ├── cart/           # Корзина
+│   ├── core/           # Настройки и инфраструктура
+│   ├── media/          # Медиа файлы
+│   ├── reviews/        # Отзывы
+│   ├── static/         # Статические файлы (css, img, js)
+│   ├── store/          # Домены магазина
+│   ├── user_profile/   # Профили пользователей
+│   └── templates/      # Шаблоны
+├── static/             # Статика
+├── docker-compose.yml  # Docker конфигурация
+└── pyproject.toml      # Зависимости Poetry
 ```
 
 ## 🔒 Безопасность
 
-- Защита от брутфорс-атак (django-axes)
+- Защита от брутфорса (django-axes)
 - CAPTCHA для форм
-- Валидация паролей
-- CSRF защита
-- Безопасные настройки для production
+- Валидация паролей, CSRF
+- Отдельные настройки для production
+
+## 🤝 Contributing
+
+PR приветствуются. Для фич создавайте ветки `feature/...`, для исправлений — `fix/...`. 
+Мержите через PR в `master`. Поддерживайте чистую историю коммитов.
 
 ## 📝 Лицензия
 
