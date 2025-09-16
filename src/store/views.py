@@ -232,50 +232,90 @@ class BookSearchView(View):
         query = request.GET.get("query", "").strip()
         cache_key = f"search_{query}"
 
-        books = cache.get(cache_key)
+        # Если пустой запрос — возвращаем пустой список без обращений
+        if not query:
+            if request.GET.get("format") == "json":
+                return JsonResponse({"results": []})
+            return render(request, self.template_name, {"books": []})
 
-        if books is None:
-            books = (
+        # Попробуем вытянуть из кэша готовые книги
+        cached_books = cache.get(cache_key)
+        if cached_books is not None:
+            if request.GET.get("format") == "json":
+                return JsonResponse(
+                    {
+                        "results": [
+                            {
+                                "title": b.title,
+                                "author": b.author,
+                                "url": b.get_absolute_url(),
+                            }
+                            for b in cached_books
+                        ]
+                    }
+                )
+            return render(request, self.template_name, {"books": cached_books})
+
+        # Пытаемся использовать Elasticsearch, с откатом на БД при ошибке
+        books: list[Book]
+        try:
+            from .documents import BookDocument
+
+            # Продвинутый запрос с бустами и опечатками
+            search = BookDocument.search().query(
+                "bool",
+                should=[
+                    {"match": {"title": {"query": query, "boost": 5}}},
+                    {"match": {"author": {"query": query, "boost": 3}}},
+                    {"fuzzy": {"title": {"value": query, "fuzziness": "AUTO"}}},
+                    {"fuzzy": {"author": {"value": query, "fuzziness": "AUTO"}}},
+                    {"wildcard": {"title": {"value": f"*{query}*", "boost": 2}}},
+                    {"wildcard": {"author": {"value": f"*{query}*", "boost": 2}}},
+                    {"match": {"description": {"query": query, "boost": 1}}},
+                ],
+                minimum_should_match=1,
+            )[:20]
+
+            response = search.execute()
+
+            # Достаём слаги и сохраняем порядок по score
+            hits = list(response)
+            slugs_in_order = [
+                getattr(h, "slug", None) for h in hits if getattr(h, "slug", None)
+            ]
+
+            if slugs_in_order:
+                slug_to_pos = {slug: i for i, slug in enumerate(slugs_in_order)}
+                qs = Book.objects.filter(slug__in=slugs_in_order)
+                books = sorted(qs, key=lambda b: slug_to_pos.get(b.slug, 10**9))
+            else:
+                books = []
+
+        except Exception:
+            # Фоллбек на обычный поиск по БД
+            books = list(
                 Book.objects.filter(
                     Q(title__icontains=query) | Q(author__icontains=query)
                 )
-                if query
-                else []
             )
-            cache.set(cache_key, books, 60 * 5)
 
-        context = {"books": books}
-        return render(request, self.template_name, context)
+        cache.set(cache_key, books, 60 * 5)
 
+        if request.GET.get("format") == "json":
+            return JsonResponse(
+                {
+                    "results": [
+                        {
+                            "title": b.title,
+                            "author": b.author,
+                            "url": b.get_absolute_url(),
+                        }
+                        for b in books
+                    ]
+                }
+            )
 
-from .documents import BookDocument
-
-
-def elasticsearch_search(request):
-    query = request.GET.get("q", "").strip()
-
-    if len(query) < 2:
-        return JsonResponse({"results": []})
-
-    search = BookDocument.search().query(
-        "multi_match", query=query, fields=["title^3", "author^2", "description"]
-    )[:10]
-
-    response = search.execute()
-
-    results = []
-    for hit in response:
-        results.append(
-            {
-                "id": hit.id,
-                "title": hit.title,
-                "author": hit.author,
-                "url": f"/book/{hit.slug}/",
-                "score": hit.meta.score,
-            }
-        )
-
-    return JsonResponse({"results": results})
+        return render(request, self.template_name, {"books": books})
 
 
 @method_decorator(cache_page(60 * 15), name="dispatch")
