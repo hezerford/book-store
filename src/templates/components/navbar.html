@@ -12,7 +12,10 @@
                 <li class="nav-item justify-content-center list-unstyled">
                     <form method="get" action="{% url 'book-search' %}" class="d-flex align-items-center authorization-form" novalidate>
                         {{ form.query.label_tag }}
-                        <input class="form-control" type="text" name="query" style="width: 300px;">
+                        <div style="position: relative; width: 300px;">
+                            <input class="form-control" type="text" name="query" style="width: 100%;" placeholder="Search books...">
+                            <div id="search-results"></div>
+                        </div>
                         <button class="btn" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
                     </form>
                 </li>

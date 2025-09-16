@@ -1,0 +1,75 @@
+/* Elasticsearch Autocomplete Styles */
+#search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    max-height: 300px;
+    overflow-y: auto;
+    display: none;
+}
+
+.autocomplete-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.2s;
+}
+
+.autocomplete-item:hover {
+    background-color: #f8f9fa;
+}
+
+.autocomplete-item:last-child {
+    border-bottom: none;
+}
+
+.autocomplete-title {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+    font-size: 14px;
+}
+
+.autocomplete-author {
+    color: #666;
+    font-size: 12px;
+    margin-bottom: 2px;
+}
+
+.autocomplete-score {
+    color: #999;
+    font-size: 11px;
+}
+
+.autocomplete-loading {
+    padding: 12px 16px;
+    color: #666;
+    font-style: italic;
+    text-align: center;
+}
+
+.autocomplete-no-results {
+    padding: 12px 16px;
+    color: #666;
+    font-style: italic;
+    text-align: center;
+}
+
+/* Позиционирование для формы поиска */
+.authorization-form {
+    position: relative;
+}
+
+/* Стили для выделения совпадений */
+.autocomplete-item strong {
+    background-color: #fff3cd;
+    padding: 1px 2px;
+    border-radius: 2px;
+}
