@@ -15,7 +15,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # external apps
     "phonenumber_field",
-    "debug_toolbar",
+    # "debug_toolbar",
     "rest_framework",
     "django_filters",
     "django_celery_results",

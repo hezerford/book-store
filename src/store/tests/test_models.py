@@ -69,12 +69,21 @@ def test_email_unique():
         Subscription.objects.create(email="unique@example.com")
 
 
+from io import BytesIO
+from PIL import Image
+
+
 @pytest.mark.django_db
 def test_book_image_upload(create_book):
     # Загружаем тестовое изображение
-    image_content = b"dummy image data"
+    buffer = BytesIO()
+    Image.new("RGB", (10, 10), color="red").save(buffer, format="JPEG")
+    buffer.seek(0)
+
     uploaded_image = SimpleUploadedFile(
-        name="test_image.jpg", content=image_content, content_type="image/jpeg"
+        name="test_image.jpg",
+        content=buffer.getvalue(),
+        content_type="image/jpeg",
     )
 
     # Создаем книгу с изображением
