@@ -59,48 +59,48 @@ def test_register_user_form(form_data, is_valid, error_fields, existing_user):
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize(
-    "form_data, is_valid, error_fields",
-    [
-        ({"username": "testuser", "password": "testpassword"}, True, []),
-    ],
-)
-def test_login_user_form(form_data, is_valid, error_fields, existing_user):
-    factory = RequestFactory()
-    request = factory.post("/login/")
-    request.session = {}
-    request.META["REMOTE_ADDR"] = "127.0.0.1"
+class TestLoginUserForm:
 
-    form = LoginUserForm(data=form_data, request=request)
+    @pytest.mark.parametrize(
+        "form_data, is_valid, error_fields",
+        [
+            ({"username": "testuser", "password": "testpassword"}, True, []),
+        ],
+    )
+    def test_login_user_form(self, form_data, is_valid, error_fields, existing_user):
+        factory = RequestFactory()
+        request = factory.post("/login/")
+        request.session = {}
+        request.META["REMOTE_ADDR"] = "127.0.0.1"
 
-    # Удаляем капчу из формы в тестах
-    if "captcha" in form.fields:
-        del form.fields["captcha"]
+        form = LoginUserForm(data=form_data, request=request)
 
-    form_is_valid = form.is_valid()
+        # Удаляем капчу из формы в тестах
+        if "captcha" in form.fields:
+            del form.fields["captcha"]
 
-    if form_is_valid != is_valid:
-        print(f"Expected is_valid={is_valid}, got {form_is_valid}")
-        print(f"Form errors: {form.errors}")
+        form_is_valid = form.is_valid()
 
-    assert form_is_valid == is_valid
+        if form_is_valid != is_valid:
+            print(f"Expected is_valid={is_valid}, got {form_is_valid}")
+            print(f"Form errors: {form.errors}")
 
-    for field in error_fields:
-        assert field in form.errors
+        assert form_is_valid == is_valid
 
+        for field in error_fields:
+            assert field in form.errors
 
-@pytest.mark.django_db
-def test_successful_login(existing_user):
-    from django.contrib.auth import authenticate
+    def test_successful_login(self, existing_user):
+        from django.contrib.auth import authenticate
 
-    # Создаем request для аутентификации через axes
-    factory = RequestFactory()
-    request = factory.post("/login/")
-    request.session = {}
-    request.META["REMOTE_ADDR"] = "127.0.0.1"  # IP адрес для axes
+        # Создаем request для аутентификации через axes
+        factory = RequestFactory()
+        request = factory.post("/login/")
+        request.session = {}
+        request.META["REMOTE_ADDR"] = "127.0.0.1"  # IP адрес для axes
 
-    # Аутентифицируемся через authenticate с правильными данными
-    user = authenticate(request, username="testuser", password="testpassword")
+        # Аутентифицируемся через authenticate с правильными данными
+        user = authenticate(request, username="testuser", password="testpassword")
 
-    assert user is not None
-    assert user.is_active
+        assert user is not None
+        assert user.is_active
