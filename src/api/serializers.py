@@ -138,7 +138,19 @@ class ReviewSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         )
-        read_only_fields = ("created_at", "updated_at")
+        read_only_fields = ("created_at", "updated_at", "user")
+        swagger_schema_fields = {
+            "example": {
+                "id": 1,
+                "book": 5,
+                "book_title": "Преступление и наказание",
+                "user": "johndoe",
+                "rating": 5,
+                "text": "Отличная книга, рекомендую всем!",
+                "created_at": "2023-09-15T10:30:00Z",
+                "updated_at": "2023-09-15T10:30:00Z",
+            }
+        }
 
     def create(self, validated_data):
         validated_data["user"] = self.context["request"].user
@@ -153,6 +165,18 @@ class ReviewDetailSerializer(serializers.ModelSerializer):
         model = Review
         fields = "__all__"
         read_only_fields = ("created_at", "updated_at", "user", "book")
+        swagger_schema_fields = {
+            "example": {
+                "id": 1,
+                "book": 5,
+                "book_title": "Преступление и наказание",
+                "user": "johndoe",
+                "rating": 5,
+                "text": "Отличная книга, рекомендую всем! Захватывающий сюжет и глубокий психологизм.",
+                "created_at": "2023-09-15T10:30:00Z",
+                "updated_at": "2023-09-15T14:20:00Z",
+            }
+        }
 
 
 # ===== CART SERIALIZERS =====
@@ -175,6 +199,17 @@ class CartItemSerializer(serializers.ModelSerializer):
             "total_price",
         )
         read_only_fields = ("price", "total_price")
+        swagger_schema_fields = {
+            "example": {
+                "id": 1,
+                "book": 5,
+                "book_title": "Преступление и наказание",
+                "book_slug": "prestuplenie-i-nakazanie",
+                "quantity": 2,
+                "price": 24.99,
+                "total_price": 49.98,
+            }
+        }
 
     def get_total_price(self, obj):
         return obj.price * obj.quantity
@@ -218,6 +253,36 @@ class CartSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         )
+        swagger_schema_fields = {
+            "example": {
+                "id": 1,
+                "user": 2,
+                "total_price": 99.95,
+                "total_items": 3,
+                "items": [
+                    {
+                        "id": 1,
+                        "book": 5,
+                        "book_title": "Преступление и наказание",
+                        "book_slug": "prestuplenie-i-nakazanie",
+                        "quantity": 2,
+                        "price": 24.99,
+                        "total_price": 49.98,
+                    },
+                    {
+                        "id": 2,
+                        "book": 8,
+                        "book_title": "Война и мир",
+                        "book_slug": "vojna-i-mir",
+                        "quantity": 1,
+                        "price": 49.97,
+                        "total_price": 49.97,
+                    },
+                ],
+                "created_at": "2023-09-15T10:00:00Z",
+                "updated_at": "2023-09-15T14:30:00Z",
+            }
+        }
 
 
 # ===== AUTHENTICATION SERIALIZERS =====
@@ -226,6 +291,14 @@ class CartSerializer(serializers.ModelSerializer):
 class UserLoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
+
+    class Meta:
+        swagger_schema_fields = {
+            "example": {
+                "username": "johndoe",
+                "password": "securepassword123",
+            }
+        }
 
     def validate(self, data):
         username = data.get("username")
@@ -256,6 +329,14 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             "password",
             "password_confirm",
         )
+        swagger_schema_fields = {
+            "example": {
+                "username": "johndoe",
+                "email": "john.doe@example.com",
+                "password": "securepassword123",
+                "password_confirm": "securepassword123",
+            }
+        }
 
     def validate(self, data):
         if data["password"] != data["password_confirm"]:
@@ -293,6 +374,26 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "favorite_books",
         )
         read_only_fields = ("user", "date_joined")
+        swagger_schema_fields = {
+            "example": {
+                "user": 2,
+                "first_name": "John",
+                "last_name": "Doe",
+                "full_name": "John Doe",
+                "street": "123 Main St",
+                "city": "Moscow",
+                "postal_code": "101000",
+                "country": "Russia",
+                "birth_date": "1990-05-15",
+                "bio": "Book lover and avid reader",
+                "phone_number": "+7-999-123-45-67",
+                "profile_picture": None,
+                "profile_picture_url": None,
+                "date_joined": "2023-01-15T08:30:00Z",
+                "is_active": True,
+                "favorite_books": [5, 8, 12],
+            }
+        }
 
     def get_full_name(self, obj):
         return obj.full_name()
