@@ -1,33 +1,38 @@
-from django.test import Client
 import pytest
+
+from django.test import Client
+from django.contrib.auth.models import User
+from django.core.cache import cache
+
 from rest_framework.test import APIClient
 from mixer.backend.django import mixer
-from django.contrib.auth.models import User
 
 from store.models import Book, Subscription
 from cart.models import Cart, CartItem
 from user_profile.models import UserProfile
 
-from django.core.cache import cache
-
 
 @pytest.fixture(autouse=True)
 def clear_cache():
-    cache.clear()  # Очищает весь кэш перед каждым тестом
+    """Удаляем кэш перед тестами"""
+    cache.clear()
 
 
 @pytest.fixture(autouse=True)
 def media_storage(settings, tmpdir):
+    """Создаем временно хранилище в памяти для теста медия файлов"""
     settings.MEDIA_ROOT = tmpdir.strpath
 
 
 @pytest.fixture(autouse=True)
 def force_test_email_backend(settings):
+    """Используем локальную память для эмитации отправки писем"""
     settings.EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
 
 
 @pytest.fixture(autouse=True)
 def celery_run_eager(settings):
+    """Делает задачи синхронными для лучшего захвата ошибок."""
     settings.CELERY_TASK_ALWAYS_EAGER = True
     settings.CELERY_TASK_EAGER_PROPAGATES = True
 
