@@ -1,5 +1,13 @@
+from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
+from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
+from rest_framework.authtoken.models import Token
+
 from store.models import Book, Genre
+from cart.models import Cart, CartItem
+from reviews.models import Review
+from user_profile.models import UserProfile
 
 
 class GenreSerializer(serializers.ModelSerializer):
@@ -109,3 +117,198 @@ class BookDetailSerializer(serializers.ModelSerializer):
 
     def get_is_in_stock(self, obj):
         return obj.is_in_stock()
+
+
+# ===== REVIEWS SERIALIZERS =====
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField(read_only=True)
+    book_title = serializers.ReadOnlyField(source="book.title")
+
+    class Meta:
+        model = Review
+        fields = (
+            "id",
+            "book",
+            "book_title",
+            "user",
+            "rating",
+            "text",
+            "created_at",
+            "updated_at",
+        )
+        read_only_fields = ("created_at", "updated_at")
+
+    def create(self, validated_data):
+        validated_data["user"] = self.context["request"].user
+        return super().create(validated_data)
+
+
+class ReviewDetailSerializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField(read_only=True)
+    book_title = serializers.ReadOnlyField(source="book.title")
+
+    class Meta:
+        model = Review
+        fields = "__all__"
+        read_only_fields = ("created_at", "updated_at", "user", "book")
+
+
+# ===== CART SERIALIZERS =====
+
+
+class CartItemSerializer(serializers.ModelSerializer):
+    book_title = serializers.ReadOnlyField(source="book.title")
+    book_slug = serializers.ReadOnlyField(source="book.slug")
+    total_price = serializers.SerializerMethodField()
+
+    class Meta:
+        model = CartItem
+        fields = (
+            "id",
+            "book",
+            "book_title",
+            "book_slug",
+            "quantity",
+            "price",
+            "total_price",
+        )
+        read_only_fields = ("price", "total_price")
+
+    def get_total_price(self, obj):
+        return obj.price * obj.quantity
+
+    def create(self, validated_data):
+        cart = self.context["cart"]
+        book = validated_data["book"]
+
+        # Проверка на существование книги в корзине
+        existing_item = CartItem.objects.filter(cart=cart, book=book).first()
+        if existing_item:
+            existing_item.quantity += validated_data.get("quantity", 1)
+            existing_item.save()
+            return existing_item
+
+        validated_data["cart"] = cart
+        validated_data["price"] = book.get_final_price()
+        return super().create(validated_data)
+
+
+class CartSerializer(serializers.ModelSerializer):
+    items = CartItemSerializer(source="cartitem_set", many=True, read_only=True)
+    total_price = serializers.ReadOnlyField()
+    total_items = serializers.ReadOnlyField()
+
+    class Meta:
+        model = Cart
+        fields = (
+            "id",
+            "user",
+            "total_price",
+            "total_items",
+            "items",
+            "created_at",
+            "updated_at",
+        )
+        read_only_fields = (
+            "user",
+            "total_price",
+            "total_items",
+            "created_at",
+            "updated_at",
+        )
+
+
+# ===== AUTHENTICATION SERIALIZERS =====
+
+
+class UserLoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        username = data.get("username")
+        password = data.get("password")
+
+        if username and password:
+            user = authenticate(username=username, password=password)
+            if not user:
+                raise serializers.ValidationError(_("Invalid credentials"))
+            if not user.is_active:
+                raise serializers.ValidationError(_("User account is disabled"))
+            data["user"] = user
+        else:
+            raise serializers.ValidationError(_("Must include username and password"))
+
+        return data
+
+
+class UserRegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, min_length=8)
+    password_confirm = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = (
+            "username",
+            "email",
+            "password",
+            "password_confirm",
+        )
+
+    def validate(self, data):
+        if data["password"] != data["password_confirm"]:
+            raise serializers.ValidationError("Passwords do not match")
+        return data
+
+    def create(self, validated_data):
+        validated_data.pop("password_confirm")
+        user = User.objects.create_user(**validated_data)
+        return user
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    full_name = serializers.SerializerMethodField()
+    profile_picture_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = UserProfile
+        fields = (
+            "user",
+            "first_name",
+            "last_name",
+            "full_name",
+            "street",
+            "city",
+            "postal_code",
+            "country",
+            "birth_date",
+            "bio",
+            "phone_number",
+            "profile_picture",
+            "profile_picture_url",
+            "date_joined",
+            "is_active",
+            "favorite_books",
+        )
+        read_only_fields = ("user", "date_joined")
+
+    def get_full_name(self, obj):
+        return obj.full_name()
+
+    def get_profile_picture_url(self, obj):
+        if obj.profile_picture:
+            request = self.context.get("request")
+            if request:
+                return request.build_absolute_uri(obj.profile_picture.url)
+            return obj.profile_picture.url
+        return None
+
+    def update(self, instance, validated_data):
+        # Handle favorite_books as many-to-many
+        favorite_books = validated_data.pop("favorite_books", None)
+        if favorite_books is not None:
+            instance.favorite_books.set(favorite_books)
+
+        return super().update(instance, validated_data)
