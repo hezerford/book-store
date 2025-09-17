@@ -70,7 +70,7 @@ class TestReviewCRUD:
 
 
 @pytest.mark.django_db
-def test_reviews_pagination(self, client, create_book):
+def test_reviews_pagination(client, create_book):
     book = create_book(slug="book-for-pagination")
     # Создаем 12 пользователей и 12 отзывов и проверяем пагинацию
     for i in range(12):
