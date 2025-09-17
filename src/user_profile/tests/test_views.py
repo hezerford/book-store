@@ -7,85 +7,84 @@ from django.contrib.auth.models import User
 
 
 @pytest.mark.django_db
-def test_profile_detail_view(authenticated_client, create_user_profile):
-    user_profile = create_user_profile(first_name="John", last_name="Doe")
+class TestProfileView:
+    def test_profile_detail_view(self, authenticated_client, create_user_profile):
+        user_profile = create_user_profile(first_name="John", last_name="Doe")
 
-    url = reverse("profile-detail", kwargs={"username": user_profile.user.username})
-    response = authenticated_client.get(url)
+        url = reverse("profile-detail", kwargs={"username": user_profile.user.username})
+        response = authenticated_client.get(url)
 
-    assert response.status_code == 200, "ProfileDetailView did not return 200 OK."
-    assert "user_profile" in response.context, "User profile not in context."
-    assert (
-        response.context["user_profile"] == user_profile
-    ), "Incorrect user profile in context."
+        assert response.status_code == 200, "ProfileDetailView did not return 200 OK."
+        assert "user_profile" in response.context, "User profile not in context."
+        assert (
+            response.context["user_profile"] == user_profile
+        ), "Incorrect user profile in context."
 
+    def test_profile_update_view(self, authenticated_client, create_user_profile):
+        user_profile = create_user_profile(first_name="John", last_name="Doe")
+        url = reverse("profile-update", kwargs={"username": user_profile.user.username})
 
-@pytest.mark.django_db
-def test_profile_update_view(authenticated_client, create_user_profile):
-    user_profile = create_user_profile(first_name="John", last_name="Doe")
-    url = reverse("profile-update", kwargs={"username": user_profile.user.username})
+        data = {
+            "first_name": "Jane",
+            "last_name": "Smith",
+            "street": "123 Main St",
+            "city": "Springfield",
+            "postal_code": "12345",
+            "country": "USA",
+        }
+        response = authenticated_client.post(url, data)
 
-    data = {
-        "first_name": "Jane",
-        "last_name": "Smith",
-        "street": "123 Main St",
-        "city": "Springfield",
-        "postal_code": "12345",
-        "country": "USA",
-    }
-    response = authenticated_client.post(url, data)
+        assert (
+            response.status_code == 302
+        ), "ProfileUpdateView did not redirect after update."
+        user_profile.refresh_from_db()
+        assert user_profile.first_name == "Jane", "First name was not updated."
+        assert user_profile.city == "Springfield", "City was not updated."
 
-    assert (
-        response.status_code == 302
-    ), "ProfileUpdateView did not redirect after update."
-    user_profile.refresh_from_db()
-    assert user_profile.first_name == "Jane", "First name was not updated."
-    assert user_profile.city == "Springfield", "City was not updated."
+    def test_profile_update_view_reset_picture(
+        self, authenticated_client, create_user_profile
+    ):
+        user_profile = create_user_profile(profile_picture="profile.jpg")
+        url = reverse("profile-update", kwargs={"username": user_profile.user.username})
 
+        response = authenticated_client.post(url, data={"reset_profile_picture": "1"})
 
-@pytest.mark.django_db
-def test_profile_update_view_reset_picture(authenticated_client, create_user_profile):
-    user_profile = create_user_profile(profile_picture="profile.jpg")
-    url = reverse("profile-update", kwargs={"username": user_profile.user.username})
+        user_profile.refresh_from_db()
+        assert (
+            response.status_code == 302
+        ), "ProfileUpdateView did not redirect after reset."
+        assert not user_profile.profile_picture, "Profile picture was not reset."
 
-    response = authenticated_client.post(url, data={"reset_profile_picture": "1"})
+    def test_profile_update_view_access_other_user_profile(
+        self, authenticated_client, create_user_profile
+    ):
+        user_profile = create_user_profile(first_name="John", last_name="Doe")
+        other_user = User.objects.create(
+            username="other_user", password="other_pass12345"
+        )
+        other_user_profile = UserProfile.objects.create(user=other_user)
 
-    user_profile.refresh_from_db()
-    assert (
-        response.status_code == 302
-    ), "ProfileUpdateView did not redirect after reset."
-    assert not user_profile.profile_picture, "Profile picture was not reset."
+        url = reverse(
+            "profile-update", kwargs={"username": other_user_profile.user.username}
+        )
+        response = authenticated_client.post(url)
 
+        assert (
+            response.status_code == 302
+        ), "Unauthorized access to another profile not redirected."
+        assert response.url == reverse(
+            "profile-detail", kwargs={"username": user_profile.user.username}
+        ), "Unauthorized user not redirected to their profile."
 
-@pytest.mark.django_db
-def test_profile_update_view_access_other_user_profile(
-    authenticated_client, create_user_profile
-):
-    user_profile = create_user_profile(first_name="John", last_name="Doe")
-    other_user = User.objects.create(username="other_user", password="other_pass12345")
-    other_user_profile = UserProfile.objects.create(user=other_user)
+    def test_profile_detail_view_redirect_unauthenticated(
+        self, client, create_user_profile
+    ):
+        user_profile = create_user_profile()
 
-    url = reverse(
-        "profile-update", kwargs={"username": other_user_profile.user.username}
-    )
-    response = authenticated_client.post(url)
+        url = reverse("profile-detail", kwargs={"username": user_profile.user.username})
+        response = client.get(url)
 
-    assert (
-        response.status_code == 302
-    ), "Unauthorized access to another profile not redirected."
-    assert response.url == reverse(
-        "profile-detail", kwargs={"username": user_profile.user.username}
-    ), "Unauthorized user not redirected to their profile."
-
-
-@pytest.mark.django_db
-def test_profile_detail_view_redirect_unauthenticated(client, create_user_profile):
-    user_profile = create_user_profile()
-
-    url = reverse("profile-detail", kwargs={"username": user_profile.user.username})
-    response = client.get(url)
-
-    assert response.status_code == 302, "Unauthenticated user was not redirected."
-    assert (
-        "/login/" in response.url
-    ), "Unauthenticated user was not redirected to login."
+        assert response.status_code == 302, "Unauthenticated user was not redirected."
+        assert (
+            "/login/" in response.url
+        ), "Unauthenticated user was not redirected to login."
