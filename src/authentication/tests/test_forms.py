@@ -63,7 +63,6 @@ def test_register_user_form(form_data, is_valid, error_fields, existing_user):
     "form_data, is_valid, error_fields",
     [
         ({"username": "testuser", "password": "testpassword"}, True, []),
-        # ... остальные тесты
     ],
 )
 def test_login_user_form(form_data, is_valid, error_fields, existing_user):
@@ -92,7 +91,7 @@ def test_login_user_form(form_data, is_valid, error_fields, existing_user):
 
 @pytest.mark.django_db
 def test_successful_login(existing_user):
-    client = Client()
+    from django.contrib.auth import authenticate
 
     # Создаем request для аутентификации через axes
     factory = RequestFactory()
@@ -100,4 +99,8 @@ def test_successful_login(existing_user):
     request.session = {}
     request.META["REMOTE_ADDR"] = "127.0.0.1"  # IP адрес для axes
 
-    # Аутентифицируемся через authenticate с
+    # Аутентифицируемся через authenticate с правильными данными
+    user = authenticate(request, username="testuser", password="testpassword")
+
+    assert user is not None
+    assert user.is_active
