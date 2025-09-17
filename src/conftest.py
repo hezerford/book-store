@@ -32,6 +32,14 @@ def celery_run_eager(settings):
     settings.CELERY_TASK_EAGER_PROPAGATES = True
 
 
+@pytest.fixture(autouse=True)
+def disable_axes_for_tests(settings):
+    """Используется только ModelBackend для тестов, чтобы исключить влияние каптчи"""
+    settings.AUTHENTICATION_BACKENDS = [
+        "django.contrib.auth.backends.ModelBackend",
+    ]
+
+
 @pytest.fixture
 def create_book():
     def _create_book(**kwargs):
@@ -70,9 +78,7 @@ def create_three_books():
 @pytest.fixture
 def existing_user():
     # Создаем пользователя для тестов
-    # user = User.objects.create_user(username="testuser", password="testpassword")
     return User.objects.create_user(username="testuser", password="testpassword")
-    # return user
 
 
 @pytest.fixture
