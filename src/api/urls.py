@@ -38,7 +38,7 @@ urlpatterns = [
     ),
     path("reviews/<int:pk>/", ReviewDetailAPI.as_view(), name="review-detail"),
     # Cart endpoints
-    path("cart/", CartAPI.as_view(), name="cart"),
+    path("cart/", CartAPI.as_view(), name="api_cart"),
     path("cart/items/", CartItemListCreate.as_view(), name="cart-items"),
     path("cart/items/<int:pk>/", CartItemDetail.as_view(), name="cart-item-detail"),
     # User profile endpoint
