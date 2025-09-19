@@ -86,8 +86,8 @@ class HomePage(ListView):
             else:
                 context["books"] = Book.objects.all()
 
-        context["pop_books"] = self.get_books_with_related_data()
-        context["feature_books"] = self.get_books_with_related_data()
+        context["pop_books"] = Book.objects.with_ratings()[:12]
+        context["feature_books"] = Book.objects.with_ratings()[:8]
         context["random_book"] = self.get_random_book()
         context["random_quote"] = self.get_random_quote()
 
@@ -328,11 +328,11 @@ class AllBooks(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        cache_key = "all_books"
+        cache_key = "all_books_with_ratings"
         books = cache.get(cache_key)
 
         if not books:
-            books = Book.objects.all()
+            books = Book.objects.with_ratings()
             cache.set(cache_key, books, 60 * 15)
 
         context["title"] = "All Books"
