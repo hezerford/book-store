@@ -11,6 +11,30 @@ from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFill
 
 
+class BookManager(models.Manager):
+    """Менеджер для книг с дополнительными методами"""
+
+    def with_ratings(self):
+        """Получить книги с предварительно рассчитанным рейтингом"""
+        from django.db.models import Avg, Count
+
+        return self.annotate(
+            average_rating=Avg("reviews__rating"), reviews_count=Count("reviews")
+        )
+
+    def published(self):
+        """Только опубликованные книги"""
+        return self.filter(is_published=True)
+
+    def rated_high(self, min_rating=4.0):
+        """Книги с высоким рейтингом"""
+        return self.with_ratings().filter(average_rating__gte=min_rating)
+
+    def popular(self, limit=10):
+        """Популярные книги по количеству отзывов"""
+        return self.with_ratings().order_by("-reviews_count")[:limit]
+
+
 class Genre(models.Model):
     name = models.CharField(max_length=200, unique=True, verbose_name="Genre name")
     description = models.TextField(blank=True, null=True, verbose_name="Description")
@@ -30,6 +54,8 @@ class Genre(models.Model):
 
 
 class Book(models.Model):
+    objects = BookManager()
+
     title = models.CharField(max_length=75, verbose_name="Заголовок")
     description = models.TextField(max_length=1500, verbose_name="Описание")
     author = models.CharField(max_length=100, verbose_name="Автор")
@@ -115,9 +141,18 @@ class Book(models.Model):
             return round(((self.price - self.discounted_price) / self.price) * 100, 1)
         return 0
 
-    def is_in_stock(self):
-        """Проверяет, есть ли книга на складе"""
-        return self.stock_quantity > 0
+    def get_average_rating(self):
+        """Рассчитывает средний рейтинг книги"""
+        if self.reviews.exists():
+            return self.reviews.aggregate(models.Avg("rating"))["rating__avg"]
+        return None
+
+    def get_rating_display(self):
+        """Форматированное отображение рейтинга"""
+        avg_rating = self.get_average_rating()
+        if avg_rating is not None:
+            return f"{avg_rating:.1f}/5.0 ⭐"
+        return "Нет оценок"
 
     #   slugify преобразует пробелы в дефис и получается slug из названия
     def save(self, *args, **kwargs):
