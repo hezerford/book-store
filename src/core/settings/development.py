@@ -46,6 +46,7 @@ AXES_RESET_ON_SUCCESS = True
 AXES_COOLOFF_TIME = 0.1
 AXES_LOCKOUT_TEMPLATE = "authentication/lockout.html"
 AXES_ENABLE_ADMIN = True
+AXES_LOCK_OUT_BY_COMBINATION_USER_AND_IP = True
 
 AUTHENTICATION_BACKENDS = [
     "axes.backends.AxesStandaloneBackend",
@@ -57,3 +58,7 @@ ELASTICSEARCH_DSL_AUTOSYNC = True
 ELASTICSEARCH_DSL_SIGNAL_PROCESSOR = (
     "django_elasticsearch_dsl.signals.RealTimeSignalProcessor"
 )
+
+CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = False
+SECURE_SSL_REDIRECT = False

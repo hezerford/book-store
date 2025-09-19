@@ -134,7 +134,57 @@ SPECTACULAR_SETTINGS = {
     "TITLE": "Book Store API",
     "DESCRIPTION": "API для книжного магазина",
     "VERSION": "1.0.0",
+    "SERVE_AUTHENTICATION": ["rest_framework.authentication.SessionAuthentication"],
 }
+
+# ===========================
+# ДОПОЛНИТЕЛЬНЫЕ НАСТРОЙКИ БЕЗОПАСНОСТИ
+# ===========================
+
+# Защита от XSS и минимизация атак
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = "DENY"
+
+# Защита от кликджекинга
+SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
+
+# Настройки сессий
+SESSION_COOKIE_SECURE = False
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = "Lax"
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+# Настройки CSRF
+CSRF_COOKIE_SECURE = False
+CSRF_COOKIE_HTTPONLY = True
+CSRF_COOKIE_SAMESITE = "Lax"
+
+AXES_LOCK_OUT_BY_COMBINATION_USER_AND_IP = True
+
+# Настройки паролей
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        "OPTIONS": {
+            "min_length": 8,
+        },
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+    },
+]
+
+# Дополнительные настройки безопасности для HTTPS
+SECURE_HSTS_SECONDS = 31536000  # 1 год
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
 
 # Celery
 CELERY_BROKER_URL = config("CELERY_BROKER_URL")
