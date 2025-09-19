@@ -8,39 +8,82 @@
         <div class="row">
             <div class="col-10">
                 <div class="d-flex cards justify-content-between flex-direction-row flex-wrap all-books">
-                    {% for cart_item in cart_items %}
-                    <a class="text-decoration-none" href="{% url 'book-detail' cart_item.book.slug %}">
-                        <div class="book-card">
-                            <div class="card card-background">
-                                {% if cart_item.book.photo %}
-                                    <img src="{{ cart_item.book.photo.url }}" alt="{{ book.title }}">
+                    {% for item_with_subtotal in cart_items_with_subtotal %}
+                    {% with cart_item=item_with_subtotal.cartitem %}
+                    <div class="book-item-container">
+                        <!-- Обёртка с ссылкой для всего продукта -->
+                        <div class="book-info-section cursor-pointer" onclick="window.location.href='{% url 'book-detail' cart_item.book.slug %}'">
+                            <div class="book-card">
+                                <div class="card card-background">
+                                    {% if cart_item.book.photo %}
+                                        <img src="{{ cart_item.book.photo.url }}" alt="{{ cart_item.book.title }}">
+                                    {% else %}
+                                        <img src="{% static 'img/default-book.png' %}" alt="{{ cart_item.book.title }}">
+                                    {% endif %}
+                                </div>
+                                <p class="name-book mt-4">{{ cart_item.book.title }}</p>
+                                <p class="author-book">{{ cart_item.book.author }}</p>
+                                {% if cart_item.book.discounted_price %}
+                                        <div class="d-flex justify-content-center">
+                                            <p class="price mb-1 me-3 text-decoration-line-through no-hover">${{ cart_item.book.price }}</p>
+                                            <p class="price mb-1 font-weight-bold">$ {{ cart_item.book.discounted_price }}</p>
+                                        </div>
                                 {% else %}
-                                    <img src="{% static 'img/default-book.png' %}" alt="{{ book.title }}">
+                                        <p class="price mb-1 text-center">$ {{ cart_item.book.price }}</p>
                                 {% endif %}
+
+                                <!-- Подытог для товара -->
+                                <p class="price text-center" id="subtotal-{{ cart_item.book.slug }}">
+                                    Подытог: $ {{ item_with_subtotal.subtotal }}
+                                </p>
                             </div>
-                            <p class="name-book mt-4">{{ cart_item.book.title }}</p>
-                            <p class="author-book">{{ cart_item.book.author }}</p>
-                            {% if cart_item.book.discounted_price %}
-                                    <div class="d-flex justify-content-center">
-                                        <p class="price mb-1 me-3 text-decoration-line-through no-hover">${{ cart_item.book.price }}</p>
-                                        <p class="price mb-1 font-weight-bold">$ {{ cart_item.book.discounted_price }}</p>
-                                    </div>
-                            {% else %}  
-                                    <p class="price mb-1 text-center">$ {{ cart_item.book.price }}</p>
-                            {% endif %}
-                            <p class="price">Quantity: {{ cart_item.quantity }}</p>
                         </div>
-                    </a>
+
+                        <!-- AJAX кнопки управления количеством - вне ссылки -->
+                        <div class="quantity-controls-section mt-3">
+                            <div class="quantity-controls d-flex justify-content-center align-items-center mb-3">
+                                <button class="btn btn-outline-secondary btn-sm me-2 quantity-btn"
+                                        data-action="minus"
+                                        data-book-id="{{ cart_item.book.slug }}"
+                                        title="Уменьшить количество">
+                                    -
+                                </button>
+                                <span class="quantity-display me-2" id="quantity-{{ cart_item.book.slug }}">
+                                    {{ cart_item.quantity }}
+                                </span>
+                                <button class="btn btn-outline-secondary btn-sm quantity-btn"
+                                        data-action="plus"
+                                        data-book-id="{{ cart_item.book.slug }}"
+                                        title="Увеличить количество">
+                                    +
+                                </button>
+
+                                <!-- Кнопка удаления -->
+                                <form method="post" action="{% url 'remove-from-cart' cart_item.book.slug %}" class="ms-3 d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endwith %}
                     {% endfor %}
                 </div>
             </div>
             {% if cart_items|length > 0 %}
             <div class="col-2 d-flex justify-content-center align-items-center">
-                <h1 class="price cart-price no-hover text-center">Total price: ${{ total_price }}</h1>
+                <h1 class="price cart-price no-hover text-center" id="cart-total">
+                    Total price: ${{ total_price }}
+                </h1>
             </div>
             {% endif %}
         </div>
     </div>
 </section>
+
+<!-- Контейнер для уведомлений -->
+<div id="notification-container" class="position-fixed top-0 end-0 p-3" style="z-index: 9999;"></div>
+
+{% csrf_token %}
 
 {% endblock body %}
