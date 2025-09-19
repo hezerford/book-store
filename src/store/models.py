@@ -154,6 +154,10 @@ class Book(models.Model):
             return f"{avg_rating:.1f}/5.0 ⭐"
         return "Нет оценок"
 
+    def is_in_stock(self):
+        """Проверяет, есть ли книга на складе"""
+        return self.stock_quantity > 0
+
     #   slugify преобразует пробелы в дефис и получается slug из названия
     def save(self, *args, **kwargs):
         if not self.slug:
