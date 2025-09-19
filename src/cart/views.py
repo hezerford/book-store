@@ -4,7 +4,6 @@ from django.views.generic import TemplateView
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
-from django.core.exceptions import ValidationError
 
 from .utils import add_to_cart, get_or_create_cart
 from .models import CartItem
