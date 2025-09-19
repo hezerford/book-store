@@ -26,6 +26,11 @@
                     {% else %}
                             <p class="price mb-1 text-center">$ {{ book.price }}</p>
                     {% endif %}
+
+                    <!-- Отображение рейтинга -->
+                    <div class="rating-display text-center mt-2">
+                        <small class="text-muted">{{ book.get_rating_display }}</small>
+                    </div>
                 </div>
             </a>
             {% endfor %}

@@ -30,14 +30,19 @@
                     {% endif %}
                 </div>
                 
-                {% if reviews_count > 0 %}
-                    <div class="d-flex align-items-center mb-2">
-                        <span title="Средний рейтинг">★ {{ avg_rating|floatformat:1 }}</span>
-                        <span class="text-muted ms-2">({{ reviews_count }})</span>
-                    </div>
-                {% else %}
-                    <p>This book has no reviews.</p>
-                {% endif %}
+                <!-- Рейтинг книги -->
+                <div class="rating mb-2 {% if book.get_average_rating %}has-rating{% else %}no-rating{% endif %}">
+                    {% if book.get_average_rating %}
+                        <span class="stars">
+                            {% for i in '12345'|make_list %}
+                                <i class="fa fa-star{% if i|add:".0"|floatformat <= book.get_average_rating %}-full{% endif %}"></i>
+                            {% endfor %}
+                        </span>
+                        <span class="rating-text">{{ book.get_rating_display }}</span>
+                    {% else %}
+                        <span class="no-ratings">{{ book.get_rating_display }}</span>
+                    {% endif %}
+                </div>
     
                 <!-- Описание книги -->
                 <p class="description mb-3">{{ book.description }}</p>
